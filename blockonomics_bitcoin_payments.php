@@ -19,10 +19,6 @@ function blockonomics_MetaData()
 function blockonomics_config()
 {
 		return array(
-				"name" => "Blockonomics Merchant Gateway",
-				"description" => "Bitcoin payment method",
-				"version" => "0.1",
-				"author" => "Blockonomics",
 				// the friendly display name for a payment gateway should be
 				// defined here for backwards compatibility
 				'FriendlyName' => array(
