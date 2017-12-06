@@ -1,4 +1,4 @@
-# Blockonomics Bitcoin Payments #
+# Blockonomics WHMCS plugin #
 Accept bitcoins on your WHMCS, payments go directly into your wallet
 
 ## Description ##
