@@ -1,31 +1,13 @@
 <?php
 
-use WHMCS\Database\Capsule;
+require_once(dirname(__FILE__) . '/Blockonomics/Blockonomics.php');
+
+use Blockonomics\Blockonomics;
 
 function blockonomics_config() {
 
-	$api_secret = '';
-
-	try {
-		$api_secret = Capsule::table('tblpaymentgateways')
-				->where('gateway', 'blockonomics')
-				->where('setting', 'ApiSecret')
-				->value('value');
-	} catch(\Exception $e) {
-		echo "Error, could not get Blockonomics secret from database. {$e->getMessage()}";
-	}
-
-	if($api_secret = '') {
-		try {
-			$callback_secret = sha1(openssl_random_pseudo_bytes(20));
-			$api_secret = Capsule::table('tblpaymentgateways')
-					->where('gateway', 'blockonomics')
-					->where('setting', 'ApiSecret')
-					->update(['value' => $callback_secret]);
-		} catch(\Exception $e) {
-			echo "Error, could not get Blockonomics secret from database. {$e->getMessage()}";
-		}
-	}
+	$blockonomics = new Blockonomics();
+	$secret_value = $blockonomics->getCallbackSecret();
 	
 	return array(
 		'FriendlyName' => array(
