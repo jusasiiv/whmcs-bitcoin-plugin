@@ -8,12 +8,12 @@ function blockonomics_config() {
     ),
     'ApiKey' => array(
       'FriendlyName' => 'API Key',
-      'Description'  => 'API Key from Blockonomics API Apps.',
+      'Description'  => 'BLOCKONOMICS API KEY (Generate from <a target="_blank" href="https://www.blockonomics.co/blockonomics#/settings">Wallet Watcher</a> > Settings)  ',
       'Type'         => 'text'
     ),
     'ApiSecret' => array(
       'FriendlyName' => 'API Secret',
-      'Description'  => 'API Secret from Blockonomics API Apps.',
+      'Description'  => 'CALLBACK URL (Copy this url and set in <a target="_blank" href="https://www.blockonomics.co/merchants#/page6">Merchants</a>)',
       'Type'         => 'text'
     )
   );
