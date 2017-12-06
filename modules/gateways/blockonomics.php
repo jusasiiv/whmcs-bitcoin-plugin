@@ -46,6 +46,7 @@ function blockonomics_config() {
 }
 
 function blockonomics_link($params) {
+	
 	if (false === isset($params) || true === empty($params)) {
 		die('[ERROR] In modules/gateways/Blockonomics.php::Blockonomics_link() function: Missing or invalid $params data.');
 	}
