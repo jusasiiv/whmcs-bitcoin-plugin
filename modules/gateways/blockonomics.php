@@ -4,6 +4,8 @@ use WHMCS\Database\Capsule;
 
 function blockonomics_config() {
 
+	$api_secret = '';
+
 	try {
 		$api_secret = Capsule::table('tblpaymentgateways')
 				->where('gateway', 'blockonomics')
@@ -11,6 +13,18 @@ function blockonomics_config() {
 				->value('value');
 	} catch(\Exception $e) {
 		echo "Error, could not get Blockonomics secret from database. {$e->getMessage()}";
+	}
+
+	if($api_secret = '') {
+		try {
+			$callback_secret = sha1(openssl_random_pseudo_bytes(20));
+			$api_secret = Capsule::table('tblpaymentgateways')
+					->where('gateway', 'blockonomics')
+					->where('setting', 'ApiSecret')
+					->update(['value' => $callback_secret]);
+		} catch(\Exception $e) {
+			echo "Error, could not get Blockonomics secret from database. {$e->getMessage()}";
+		}
 	}
 	
 	return array(
