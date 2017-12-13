@@ -53,9 +53,9 @@ function blockonomics_link($params) {
 		'user_agent' => 'Blockonomics - WHMCS Extension',
 	);
 
-	$order = \Blockonomics\Merchant\Order::createOrFail($blockonomics_params, array(), $authentication);
+	//$order = \Blockonomics\Merchant\Order::createOrFail($blockonomics_params, array(), $authentication);
 
-	$form = '<form action="' . $order->payment_url . '" method="GET">';
+	$form = '<form action="#" method="GET">';
 	$form .= '<input type="submit" value="' . $params['langpaynow'] . '" />';
 	$form .= '</form>';
 
