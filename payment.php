@@ -18,11 +18,6 @@ $ca->initPage();
 
 //$ca->requireLogin(); // Uncomment this line to require a login to access this page
 
-// To assign variables to the template system use the following syntax.
-// These can then be referenced using {$variablename} in the template.
-
-$ca->assign('btc_amount', 0.0001);
-
 // Check login status
 if ($ca->isLoggedIn()) {
 
@@ -45,7 +40,7 @@ if ($ca->isLoggedIn()) {
 
 }
 
-/*
+/***********************************************
  * ADDRESS GENERATION
  */
 $api_key = Capsule::table('tblpaymentgateways')
@@ -80,6 +75,24 @@ $btc_address = $new_address->address;
 $ca->assign('btc_address', $btc_address);
 $ca->assign('secret', $secret);
 
+/************************************************/
+
+/***********************************************
+ * PRICE GENERATION
+ */
+$fiat_amount = 25;
+
+$options = [ 'http' => [ 'method'  => 'GET'] ];
+$context = stream_context_create($options);
+$contents = file_get_contents('https://www.blockonomics.co/api/price' . "?currency=USD", false, $context);
+$price = json_decode($contents);
+
+$btc_amount = intval(1.0e8 * $fiat_amount/$price->price) / 1.0e8;
+
+$ca->assign('btc_amount', $btc_amount);
+$ca->assign('fiat_amount', $fiat_amount);
+
+/************************************************/
 
 /**
  * Set a context for sidebars

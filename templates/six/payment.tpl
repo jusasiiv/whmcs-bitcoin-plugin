@@ -7,7 +7,7 @@
 
 <div id="address-div">
 	<h4>Bitcoin address</h4>
-	<a id="btc-address-a" href="bitcoin:{$btc_address}?amount=0.00010">
+	<a id="btc-address-a" href="bitcoin:{$btc_address}?amount={$btc_amount}">
 	<div id="qrcode"></div>
 	</a>
 	<h4>Click on the qr code above to open in wallet</h4>
@@ -15,7 +15,7 @@
 
 <div id="amount-div">
 		<h4>Amount</h4>
-		<h5>{$btc_amount} BTC ⇌ 10 USD</h5>
+		<h5>{$btc_amount} BTC ⇌ {$fiat_amount} USD</h5>
 </div>
 
 <h3>Address = {$btc_address}</h3>
