@@ -55,7 +55,7 @@ function blockonomics_link($params) {
 
 	//$order = \Blockonomics\Merchant\Order::createOrFail($blockonomics_params, array(), $authentication);
 
-	$form = '<form action="/whmcs/payment.php" method="GET">';
+	$form = '<form action="/whmcs/payment.php" method="POST">';
 	$form .= '<input type="hidden" name="price" value="'. $params['amount'] .'"/>';
 	$form .= '<input type="hidden" name="currency" value="'. $params['currency'] .'"/>';
 	$form .= '<input type="hidden" name="order_id" value="'. $params['invoiceid'] .'"/>';

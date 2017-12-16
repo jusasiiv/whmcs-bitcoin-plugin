@@ -41,6 +41,17 @@ if ($ca->isLoggedIn()) {
 }
 
 /***********************************************
+ * POST PARAMETERS TO VARIABLES AND CHECK IF THEY EXIST
+ */
+$fiat_amount = $_POST['price'];
+$currency = $_POST['currency'];
+$order_id = $_POST['order_id'];
+
+if(!$fiat_amount || !$currency || !$order_id) {
+	exit;
+}
+
+/***********************************************
  * ADDRESS GENERATION
  */
 $api_key = Capsule::table('tblpaymentgateways')
@@ -82,10 +93,6 @@ $ca->assign('secret', $secret);
 /***********************************************
  * PRICE GENERATION
  */
-$fiat_amount = $_GET['price'];
-$currency = $_GET['currency'];
-$order_id = $_GET['order_id'];
-
 $options = [ 'http' => [ 'method'  => 'GET'] ];
 $context = stream_context_create($options);
 $contents = file_get_contents('https://www.blockonomics.co/api/price' . "?currency=$currency", false, $context);
