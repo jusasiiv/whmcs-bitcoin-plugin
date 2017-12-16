@@ -53,9 +53,11 @@ $secret = Capsule::table('tblpaymentgateways')
 			->where('setting', 'ApiSecret')
 			->value('value');
 
+$secret = substr($secret, -40);
+
 $options = [
 	'http' => [
-		'header'  => 'Authorization: Bearer '. $api_key,
+		'header'  => 'Authorization: Bearer ' . $api_key,
 		'method'  => 'POST',
 		'content' => ''
 	]
@@ -80,17 +82,21 @@ $ca->assign('secret', $secret);
 /***********************************************
  * PRICE GENERATION
  */
-$fiat_amount = 25;
+$fiat_amount = $_GET['price'];
+$currency = $_GET['currency'];
+$order_id = $_GET['order_id'];
 
 $options = [ 'http' => [ 'method'  => 'GET'] ];
 $context = stream_context_create($options);
-$contents = file_get_contents('https://www.blockonomics.co/api/price' . "?currency=USD", false, $context);
+$contents = file_get_contents('https://www.blockonomics.co/api/price' . "?currency=$currency", false, $context);
 $price = json_decode($contents);
 
 $btc_amount = intval(1.0e8 * $fiat_amount/$price->price) / 1.0e8;
 
 $ca->assign('btc_amount', $btc_amount);
 $ca->assign('fiat_amount', $fiat_amount);
+$ca->assign('currency', $currency);
+$ca->assign('order_id', $order_id);
 
 /************************************************/
 
