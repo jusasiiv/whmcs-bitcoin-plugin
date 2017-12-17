@@ -6,6 +6,10 @@ require_once __DIR__ . '/../../../init.php';
 require_once __DIR__ . '/../../../includes/gatewayfunctions.php';
 require_once __DIR__ . '/../../../includes/invoicefunctions.php';
 
+require_once(dirname(__FILE__) . '../Blockonomics/Blockonomics.php');
+
+use Blockonomics\Blockonomics;
+
 $gatewayModuleName = 'blockonomics';
 
 // Fetch gateway configuration parameters.
@@ -17,25 +21,19 @@ if (!$gatewayParams['type']) {
 }
 
 // Retrieve data returned in payment gateway callback
-// Varies per payment gateway
-$success = $_POST["x_status"];
-$invoiceId = $_POST["x_invoice_id"];
-$transactionId = $_POST["x_trans_id"];
-$paymentAmount = $_POST["x_amount"];
-$paymentFee = $_POST["x_fee"];
-$hash = $_POST["x_hash"];
-$transactionStatus = $success ? 'Success' : 'Failure';
+$secret = $_GET['secret'];
+$status = $_GET['status'];
+$addr = $_GET['addr'];
+$value = $_GET['value'];
+$txid = $_GET['txid'];
 
 /**
  * Validate callback authenticity.
- *
- * Most payment gateways provide a method of verifying that a callback
- * originated from them. In the case of our example here, this is achieved by
- * way of a shared secret which is used to build and compare a hash.
  */
-$secretKey = $gatewayParams['secretKey'];
-if ($hash != md5($invoiceId . $transactionId . $paymentAmount . $secretKey)) {
-    $transactionStatus = 'Hash Verification Failure';
+$secret_value = $blockonomics->getCallbackSecret();
+
+if ($secret_value != $secret) {
+    $transactionStatus = 'Secret verification failure';
     $success = false;
 }
 
