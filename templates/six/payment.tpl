@@ -1,6 +1,6 @@
-<script type="text/javascript" src="qrcode.min.js"></script>
-<script type="text/javascript" src="reconnecting-websocket.min.js"></script>
-<script type="text/javascript" src="payment.js"></script>
+<script type="text/javascript" src="js/qrcode.min.js"></script>
+<script type="text/javascript" src="js/reconnecting-websocket.min.js"></script>
+<script type="text/javascript" src="js/payment.js"></script>
 
 <div id="btc-href" data-href="bitcoin:{$btc_address}?amount={$btc_amount}"></div>
 <div id="btc-address" data-address="{$btc_address}"></div>
