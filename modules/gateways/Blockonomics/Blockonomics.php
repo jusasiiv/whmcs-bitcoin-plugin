@@ -85,4 +85,16 @@ class Blockonomics {
 		return $new_address->address;
 	}
 
+	/*
+	 * Convert fiat amount to BTC
+	 */
+	public function getBitcoinAmount($fiat_amount, $currency) {
+		$options = [ 'http' => [ 'method'  => 'GET'] ];
+		$context = stream_context_create($options);
+		$contents = file_get_contents('https://www.blockonomics.co/api/price' . "?currency=$currency", false, $context);
+		$price = json_decode($contents);
+
+		return intval(1.0e8 * $fiat_amount/$price->price);
+	}
+
 }

@@ -32,6 +32,10 @@ if(!$fiat_amount || !$currency || !$order_id) {
 	exit;
 }
 
+$ca->assign('fiat_amount', $fiat_amount);
+$ca->assign('currency', $currency);
+$ca->assign('order_id', $order_id);
+
 /***********************************************
  * ADDRESS GENERATION
  */
@@ -44,17 +48,10 @@ $ca->assign('btc_address', $btc_address);
 /***********************************************
  * PRICE GENERATION
  */
-$options = [ 'http' => [ 'method'  => 'GET'] ];
-$context = stream_context_create($options);
-$contents = file_get_contents('https://www.blockonomics.co/api/price' . "?currency=$currency", false, $context);
-$price = json_decode($contents);
 
-$btc_amount = intval(1.0e8 * $fiat_amount/$price->price) / 1.0e8;
+$btc_amount = $blockonomics->getBitcoinAmount($fiat_amount, $currency) / 1.0e8;
 
 $ca->assign('btc_amount', $btc_amount);
-$ca->assign('fiat_amount', $fiat_amount);
-$ca->assign('currency', $currency);
-$ca->assign('order_id', $order_id);
 
 /************************************************/
 
