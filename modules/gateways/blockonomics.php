@@ -7,6 +7,7 @@ use Blockonomics\Blockonomics;
 function blockonomics_config() {
 
 	$blockonomics = new Blockonomics();
+	$blockonomics->createOrderTableIfNotExist();
 	$secret_value = $blockonomics->getCallbackSecret();
 	
 	return array(
