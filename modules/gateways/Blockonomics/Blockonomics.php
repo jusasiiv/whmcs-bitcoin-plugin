@@ -51,14 +51,20 @@ class Blockonomics {
 	}
 
 	/*
-	 * Get new address from Blockonomics Api
+	 * Get user configured API key from database
 	 */
-	public function getNewBitcoinAddress() {
-		$api_key = Capsule::table('tblpaymentgateways')
+	public function getApiKey() {
+		return Capsule::table('tblpaymentgateways')
 			->where('gateway', 'blockonomics')
 			->where('setting', 'ApiKey')
 			->value('value');
+	}
 
+	/*
+	 * Get new address from Blockonomics Api
+	 */
+	public function getNewBitcoinAddress() {
+		$api_key = $this->getApiKey();
 		$secret = $this->getCallbackSecret();
 
 		// Secret is formatted http://url.com?secret=abc123,

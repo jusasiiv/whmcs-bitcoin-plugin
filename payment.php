@@ -48,7 +48,6 @@ $ca->assign('btc_address', $btc_address);
 /***********************************************
  * PRICE GENERATION
  */
-
 $btc_amount = $blockonomics->getBitcoinAmount($fiat_amount, $currency) / 1.0e8;
 
 $ca->assign('btc_amount', $btc_amount);
