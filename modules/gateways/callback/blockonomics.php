@@ -9,6 +9,8 @@ require_once __DIR__ . '/../../../includes/invoicefunctions.php';
 require_once(dirname(__FILE__) . '../Blockonomics/Blockonomics.php');
 
 use Blockonomics\Blockonomics;
+// Init Blockonomics class
+$blockonomics = new Blockonomics();
 
 $gatewayModuleName = 'blockonomics';
 
