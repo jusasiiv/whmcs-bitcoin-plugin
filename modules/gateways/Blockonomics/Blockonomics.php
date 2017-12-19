@@ -134,23 +134,39 @@ class Blockonomics {
 	}
 
 	/*
-	 * Insert new order to database
+	 * Try to insert new order to database
+	 * If order exists, return with false
 	 */
 	public function insertOrderToDb($id_order, $address, $value, $bits) {
-			try {
-				Capsule::table('blockonomics_bitcoin_orders')->insert(
-					[
-						'id_order' => $id_order,
-						'timestamp' => time(),
-						'addr' => $address,
-						'status' => -1,
-						'value' => $value,
-						'bits' => $bits,
-					]
-				);
-			} catch (\Exception $e) {
-					echo "Unable to insert new order into blockonomics_bitcoin_orders: {$e->getMessage()}";
-			}
+
+		try {
+			$existing_order = Capsule::table('blockonomics_bitcoin_orders')
+				->where('id_order', $id_order)
+				->value('id');
+		} catch (\Exception $e) {
+				echo "Unable to select order from blockonomics_bitcoin_orders: {$e->getMessage()}";
+		}
+
+		if($existing_order) {
+			return false;
+		}
+
+		try {
+			Capsule::table('blockonomics_bitcoin_orders')->insert(
+				[
+					'id_order' => $id_order,
+					'timestamp' => time(),
+					'addr' => $address,
+					'status' => -1,
+					'value' => $value,
+					'bits' => $bits,
+				]
+			);
+		} catch (\Exception $e) {
+				echo "Unable to insert new order into blockonomics_bitcoin_orders: {$e->getMessage()}";
+		}
+
+		return true;
 	}
 
 }
