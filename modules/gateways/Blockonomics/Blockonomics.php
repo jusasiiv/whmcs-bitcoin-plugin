@@ -133,4 +133,24 @@ class Blockonomics {
 		}
 	}
 
+	/*
+	 * Insert new order to database
+	 */
+	public function insertOrderToDb($id_order, $address, $value, $bits) {
+			try {
+				Capsule::table('blockonomics_bitcoin_orders')->insert(
+					[
+						'id_order' => $id_order,
+						'timestamp' => time(),
+						'addr' => $address,
+						'status' => -1,
+						'value' => $value,
+						'bits' => $bits,
+					]
+				);
+			} catch (\Exception $e) {
+					echo "Unable to insert new order into blockonomics_bitcoin_orders: {$e->getMessage()}";
+			}
+	}
+
 }

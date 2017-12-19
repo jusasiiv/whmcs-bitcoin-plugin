@@ -43,7 +43,6 @@ $btc_address = $blockonomics->getNewBitcoinAddress();
 
 $ca->assign('btc_address', $btc_address);
 
-/************************************************/
 
 /***********************************************
  * PRICE GENERATION
@@ -51,6 +50,13 @@ $ca->assign('btc_address', $btc_address);
 $btc_amount = $blockonomics->getBitcoinAmount($fiat_amount, $currency) / 1.0e8;
 
 $ca->assign('btc_amount', $btc_amount);
+
+
+/***********************************************
+ * ÁDD ORDER TO DB
+ */
+
+$blockonomics->insertOrderToDb($order_id, $btc_address, $fiat_amount, $btc_amount);
 
 /************************************************/
 
