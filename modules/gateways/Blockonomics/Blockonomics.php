@@ -8,7 +8,7 @@ class Blockonomics {
 
 	// Set debug mode on or off
 	// In debug mode, create always the same address
-	const DEBUG = false;
+	const DEBUG = true;
 
 	/*
 	 * Try to get callback secret from db

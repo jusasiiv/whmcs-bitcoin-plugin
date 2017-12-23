@@ -21,7 +21,7 @@ $ca->addToBreadCrumb('payment.php', 'Blockonomics Bitcoin Payment');
 
 $ca->initPage();
 
-/***********************************************
+/*
  * SET POST PARAMETERS TO VARIABLES AND CHECK IF THEY EXIST
  */
 $fiat_amount = $_POST['price'];
@@ -36,7 +36,7 @@ $ca->assign('fiat_amount', $fiat_amount);
 $ca->assign('currency', $currency);
 $ca->assign('order_id', $order_id);
 
-/***********************************************
+/*
  * ADDRESS GENERATION
  */
 $btc_address = $blockonomics->getNewBitcoinAddress();
@@ -44,21 +44,18 @@ $btc_address = $blockonomics->getNewBitcoinAddress();
 $ca->assign('btc_address', $btc_address);
 
 
-/***********************************************
+/*
  * PRICE GENERATION
  */
-$btc_amount = $blockonomics->getBitcoinAmount($fiat_amount, $currency) / 1.0e8;
+$btc_amount = $blockonomics->getBitcoinAmount($fiat_amount, $currency);
 
-$ca->assign('btc_amount', $btc_amount);
+$ca->assign('btc_amount', $btc_amount / 1.0e8);
 
-
-/***********************************************
+/*
  * ÁDD ORDER TO DB
  */
 
 $blockonomics->insertOrderToDb($order_id, $btc_address, $fiat_amount, $btc_amount);
-
-/************************************************/
 
 /**
  * Set a context for sidebars
