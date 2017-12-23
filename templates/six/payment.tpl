@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="css/style.css">
 <script type="text/javascript" src="js/qrcode.min.js"></script>
 <script type="text/javascript" src="js/reconnecting-websocket.min.js"></script>
 <script type="text/javascript" src="js/payment.js"></script>
@@ -21,4 +22,8 @@
 		<h5>{$btc_amount} BTC ⇌ {$fiat_amount} {$currency}</h5>
 </div>
 
-<h3>Address = {$btc_address}</h3>
+<div class="clear"></div>
+
+<label id="btc-address-label">{$btc_address}</label>
+
+<h4>Powered by blockonomics</h4>

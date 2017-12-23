@@ -1,0 +1,91 @@
+#qrcode img {
+	margin-left: auto;
+	margin-right: auto;
+	left: 0;
+	right: 0;
+	position: relative;
+	text-align: center;	
+}
+
+#address-div, #amount-div {
+	float: left;
+	max-width: 250px;
+}
+
+#amount-div {
+	float: left;
+  margin-left: 5em;
+}
+
+#address-div h4, #amount-div h4 {
+	color: #767676;
+	font-size: 1em;
+	font-weight: 800;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+  text-align: center;
+}
+
+#amount-div h5 {
+	line-height: 1.1;
+	font-size: 1.6rem;
+	margin-top: 2rem;
+	margin-bottom: 2rem;
+	font-weight: 500;
+}
+
+#btc-address-label {
+	text-align: center;
+	width: 100%;
+	border: 1px solid grey;
+	box-shadow: none;
+	background-color: unset;
+	font-size: 1.2em;
+	padding: 0.5em 2em 0.5em 2em;
+	max-width: 500px;
+	color: #666;
+}
+
+.red {
+	color: #FF0000;
+}
+
+.left {
+	float: left;
+}
+
+.right {
+	float: right;
+}
+
+.big-text {
+	font-size: 1.5em;
+}
+
+.clear {
+	clear: both;
+}
+
+.padding {
+	padding: 1em;
+}
+
+@media (max-width: 601px) {
+	#payment-view {
+		text-align: center;
+	}
+	#address-div, #amount-div {
+		float: none;
+		max-width: none;
+		margin-left: 0;
+	}
+	#amount-div h5 {
+		text-align: center;
+	}
+}
+
+@media (max-width: 430px) {
+	#btc-address-label {
+		font-size: 1em;
+	}
+}
