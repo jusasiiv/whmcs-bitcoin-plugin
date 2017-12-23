@@ -6,6 +6,10 @@ use WHMCS\Database\Capsule;
 
 class Blockonomics {
 
+	// Set debug mode on or off
+	// In debug mode, create always the same address
+	const DEBUG = false;
+
 	/*
 	 * Try to get callback secret from db
 	 * If no secret exists, create new
@@ -64,6 +68,11 @@ class Blockonomics {
 	 * Get new address from Blockonomics Api
 	 */
 	public function getNewBitcoinAddress() {
+
+		if($this::DEBUG) {
+			return "125K2j7wkk8SFZKXr6wapkrCuy1hifiknh";
+		}
+
 		$api_key = $this->getApiKey();
 		$secret = $this->getCallbackSecret();
 
