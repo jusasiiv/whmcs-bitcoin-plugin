@@ -1,12 +1,11 @@
-
 <?php
 
 // Require libraries needed for gateway module functions.
-require_once __DIR__ . '../../../init.php';
-require_once __DIR__ . '../../../includes/gatewayfunctions.php';
-require_once __DIR__ . '../../../includes/invoicefunctions.php';
+include '../../../init.php';
+include '../../../includes/gatewayfunctions.php';
+include '../../../includes/invoicefunctions.php';
 
-require_once(dirname(__FILE__) . '../Blockonomics/Blockonomics.php');
+include '../Blockonomics/Blockonomics.php';
 
 use Blockonomics\Blockonomics;
 // Init Blockonomics class
@@ -33,11 +32,22 @@ $txid = $_GET['txid'];
  * Validate callback authenticity.
  */
 $secret_value = $blockonomics->getCallbackSecret();
+$secret_value = substr($secret_value, -40);
 
 if ($secret_value != $secret) {
     $transactionStatus = 'Secret verification failure';
     $success = false;
+
+    echo "Verification error";
+    die();
 }
+
+$order = $blockonomics->getOrderByAddress($addr);
+
+var_dump($order);
+
+$invoiceId = $order['order_id'];
+$transactionId = $order['id'];
 
 /**
  * Validate Callback Invoice ID.
@@ -54,6 +64,7 @@ if ($secret_value != $secret) {
  */
 
 $invoiceId = checkCbInvoiceID($invoiceId, $gatewayParams['name']);
+
 /**
  * Check Callback Transaction ID.
  *
@@ -80,23 +91,23 @@ checkCbTransID($transactionId);
  */
 logTransaction($gatewayParams['name'], $_POST, $transactionStatus);
 
-if ($success) {
-    /**
-     * Add Invoice Payment.
-     *
-     * Applies a payment transaction entry to the given invoice ID.
-     *
-     * @param int $invoiceId         Invoice ID
-     * @param string $transactionId  Transaction ID
-     * @param float $paymentAmount   Amount paid (defaults to full balance)
-     * @param float $paymentFee      Payment fee (optional)
-     * @param string $gatewayModule  Gateway module name
-     */
-    addInvoicePayment(
-        $invoiceId,
-        $transactionId,
-        $paymentAmount,
-        $paymentFee,
-        $gatewayModuleName
-    );
-}
+/**
+ * Add Invoice Payment.
+ *
+ * Applies a payment transaction entry to the given invoice ID.
+ *
+ * @param int $invoiceId         Invoice ID
+ * @param string $transactionId  Transaction ID
+ * @param float $paymentAmount   Amount paid (defaults to full balance)
+ * @param float $paymentFee      Payment fee (optional)
+ * @param string $gatewayModule  Gateway module name
+ */
+addInvoicePayment(
+    $invoiceId,
+    $transactionId,
+    $paymentAmount,
+    $paymentFee,
+    $gatewayModuleName
+);
+
+echo "<br><br>Success";
