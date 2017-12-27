@@ -178,4 +178,29 @@ class Blockonomics {
 		return true;
 	}
 
+	/*
+	 * Try to get order row from db by address
+	 */
+	public function getOrderByAddress($bitcoinAddress) {
+		try {
+			$existing_order = Capsule::table('blockonomics_bitcoin_orders')
+				->where('addr', $bitcoinAddress)
+				->first();
+		} catch (\Exception $e) {
+				echo "Unable to select order from blockonomics_bitcoin_orders: {$e->getMessage()}";
+		}
+
+		$row_in_array = array(
+			"id" => $existing_order->id,
+			"order_id" => $existing_order->id_order,
+			"timestamp"=> $existing_order->timestamp,
+			"status" => $existing_order->status,
+			"value" => $existing_order->value,
+			"bits" => $existing_order->bits,
+			"bits_payed" => $existing_order->bits_payed
+		);
+
+		return $row_in_array;
+	}
+
 }
