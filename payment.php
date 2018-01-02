@@ -27,6 +27,7 @@ $ca->initPage();
 $fiat_amount = $_POST['price'];
 $currency = $_POST['currency'];
 $order_id = $_POST['order_id'];
+$system_url = $blockonomics->getSystemUrl();
 
 if(!$fiat_amount || !$currency || !$order_id) {
 	exit;
@@ -35,6 +36,7 @@ if(!$fiat_amount || !$currency || !$order_id) {
 $ca->assign('fiat_amount', $fiat_amount);
 $ca->assign('currency', $currency);
 $ca->assign('order_id', $order_id);
+$ca->assign('system_url', $system_url);
 
 /*
  * ADDRESS GENERATION

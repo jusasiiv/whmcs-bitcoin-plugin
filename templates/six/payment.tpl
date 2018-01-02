@@ -5,6 +5,7 @@
 
 <div id="btc-href" data-href="bitcoin:{$btc_address}?amount={$btc_amount}"></div>
 <div id="btc-address" data-address="{$btc_address}"></div>
+<div id="system-url" data-url="{$system_url}" data-orderid="{$order_id}"></div>
 
 <h1>Order# {$order_id}</h1>
 <h2>To pay, send exact amount of BTC to the given address</h2>

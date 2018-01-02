@@ -1,5 +1,9 @@
 window.onload = function() {
 
+	var systemUrlDiv = document.getElementById("system-url");
+	var systemUrl = systemUrlDiv.dataset.url;
+	var orderId = systemUrlDiv.dataset.orderid;
+
 	var btcHrefDiv = document.getElementById("btc-href");
 	var btcHref = btcHrefDiv.dataset.href;
 
@@ -22,7 +26,7 @@ window.onload = function() {
 
 	ws.onmessage = function (evt) {
 		ws.close();
-		redirectToURL('checkout/onepage/success');
+		redirectToURL(systemUrl + 'viewinvoice.php?id=' + orderId + '&paymentsuccess=true');
 	}
 
 }
