@@ -203,4 +203,13 @@ class Blockonomics {
 		return $row_in_array;
 	}
 
+	/*
+	 * Get URL of the WHMCS installation
+	 */
+	public function getSystemUrl() {
+		return Capsule::table('tblconfiguration')
+			->where('setting', 'SystemURL')
+			->value('value');
+	}
+
 }
