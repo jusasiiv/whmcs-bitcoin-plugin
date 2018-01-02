@@ -24,9 +24,11 @@ window.onload = function() {
 	//Websocket
 	var ws = new ReconnectingWebSocket("wss://www.blockonomics.co/payment/" + btcAddress + "?timestamp=" + seconds);
 
+	redirUrl = systemUrl + 'viewinvoice.php?id=' + orderId + '&paymentsuccess=true';
+
 	ws.onmessage = function (evt) {
 		ws.close();
-		redirectToURL(systemUrl + 'viewinvoice.php?id=' + orderId + '&paymentsuccess=true');
+		redirectToURL(redirUrl);
 	}
 
 }
