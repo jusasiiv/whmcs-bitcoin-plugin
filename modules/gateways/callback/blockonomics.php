@@ -109,5 +109,3 @@ addInvoicePayment(
     $paymentFee,
     $gatewayModuleName
 );
-
-echo "<br><br>Success";
