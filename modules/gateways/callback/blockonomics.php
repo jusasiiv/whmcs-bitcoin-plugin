@@ -44,8 +44,6 @@ if ($secret_value != $secret) {
 
 $order = $blockonomics->getOrderByAddress($addr);
 
-var_dump($order);
-
 $invoiceId = $order['order_id'];
 $transactionId = $order['id'];
 
