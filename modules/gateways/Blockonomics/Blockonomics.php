@@ -42,6 +42,9 @@ class Blockonomics {
 
 		try {
 			$callback_secret = sha1(openssl_random_pseudo_bytes(20));
+
+			$callback_secret = $this->getSystemUrl() . 'modules/gateways/callback/blockonomics.php?secret=' . $callback_secret;
+
 			$api_secret = Capsule::table('tblpaymentgateways')
 					->where('gateway', 'blockonomics')
 					->where('setting', 'ApiSecret')
