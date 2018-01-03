@@ -206,6 +206,21 @@ class Blockonomics {
 		return $row_in_array;
 	}
 
+	public function updateOrderInDb($addr, $txid, $status, $bits_payed) {
+		try {
+			Capsule::table('blockonomics_bitcoin_orders')
+					->where('addr', $addr)
+					->update([
+						'txid' => $txid,
+						'status' => $status,
+						'bits_payed' => $bits_payed
+					]
+				);
+			} catch (\Exception $e) {
+				echo "Unable to update order to blockonomics_bitcoin_orders: {$e->getMessage()}";
+		}
+	}
+
 	/*
 	 * Get URL of the WHMCS installation
 	 */
