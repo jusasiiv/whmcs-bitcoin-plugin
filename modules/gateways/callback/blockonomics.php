@@ -43,9 +43,20 @@ if ($secret_value != $secret) {
 }
 
 $order = $blockonomics->getOrderByAddress($addr);
-
 $invoiceId = $order['order_id'];
 $transactionId = $order['id'];
+$bits = $order['bits'];
+
+if($status == 0) {
+    $blockonomics->updateOrderInDb($addr, $txid, $status, $value);
+    die();
+}
+
+if($status != 2) {
+    die();
+}
+
+$blockonomics->updateOrderInDb($addr, $txid, $status, $value);
 
 /**
  * Validate Callback Invoice ID.
