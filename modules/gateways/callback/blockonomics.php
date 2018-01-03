@@ -52,7 +52,7 @@ if($status == 0) {
     die();
 }
 
-if($status != 2) {
+if($status != 2 || $value < $bits) {
     die();
 }
 
