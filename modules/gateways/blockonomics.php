@@ -6,6 +6,18 @@ use Blockonomics\Blockonomics;
 
 function blockonomics_config() {
 
+	add_hook('AdminAreaFooterOutput', 1, function($vars) {
+    return <<<HTML
+		<script type="text/javascript">
+			var inputFields = document.getElementsByName('field[ApiSecret]');
+			inputFields.forEach(function(element) {
+				element.readOnly = true;
+			});
+		</script>
+HTML;
+
+	});
+
 	$blockonomics = new Blockonomics();
 	$blockonomics->createOrderTableIfNotExist();
 	$secret_value = $blockonomics->getCallbackSecret();
