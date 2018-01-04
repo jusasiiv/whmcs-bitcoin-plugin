@@ -73,7 +73,7 @@ class Blockonomics {
 	public function getNewBitcoinAddress() {
 
 		if($this::DEBUG) {
-			return "1BC75JHYFkc3FRPvy3DwSpjz2BgntWzXPR";
+			return "15wQ3XgiwrATmB4bZ6mqPnK74Z37canz4W";
 		}
 
 		$api_key = $this->getApiKey();

@@ -28,7 +28,7 @@ window.onload = function() {
 
 	ws.onmessage = function (evt) {
 		ws.close();
-		redirectToURL(redirUrl);
+		window.location.href = redirUrl;
 	}
 
 }
