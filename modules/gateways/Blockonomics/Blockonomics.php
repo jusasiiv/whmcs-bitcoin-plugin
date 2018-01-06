@@ -58,6 +58,33 @@ class Blockonomics {
 	}
 
 	/*
+	 * Generate new order status into the database if it does not exist
+	 */
+	public function addOrderStatusIfNotExists() {
+
+		try {
+			$order_status = Capsule::table('tblorderstatuses')
+					->where('title', 'Waiting for Bitcoin Confirmation')
+					->value('title');
+
+			if(!$order_status) {
+
+				Capsule::table('tblorderstatuses')->insert(
+					[
+						'title' => 'Waiting for Bitcoin Confirmation',
+						'color' => '#1a4d80',
+						'showpending' => 1,
+						'showactive' => 0,
+						'showcancelled' => 0,
+						'sortorder' => 50,
+					]);
+			}
+		} catch(\Exception $e) {
+			echo "Error, could not get Blockonomics secret from database. {$e->getMessage()}";
+		}
+	}
+
+	/*
 	 * Get user configured API key from database
 	 */
 	public function getApiKey() {

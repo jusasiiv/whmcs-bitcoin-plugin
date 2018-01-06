@@ -6,6 +6,7 @@ use Blockonomics\Blockonomics;
 
 function blockonomics_config() {
 
+	// When loading payment gateway setup page, disable editing of callback url field
 	add_hook('AdminAreaFooterOutput', 1, function($vars) {
     return <<<HTML
 		<script type="text/javascript">
@@ -20,6 +21,7 @@ HTML;
 
 	$blockonomics = new Blockonomics();
 	$blockonomics->createOrderTableIfNotExist();
+	$blockonomics->addOrderStatusIfNotExists();
 	$secret_value = $blockonomics->getCallbackSecret();
 	
 	return array(
@@ -33,7 +35,7 @@ HTML;
 			'Type'         => 'text'
 		),
 		'ApiSecret' => array(
-			'FriendlyName' => 'API Secret',
+			'FriendlyName' => 'Callback URL',
 			'Description'  => 'CALLBACK URL (Copy this url and set in <a target="_blank" href="https://www.blockonomics.co/merchants#/page6">Merchants</a>)',
 			'Type'         => 'text'
 		)
