@@ -95,6 +95,25 @@ class Blockonomics {
 	}
 
 	/*
+	 * Update order status to 'Waiting for Bitcoin Confirmation'
+	 */
+	public function updateOrderStatus($orderId) {
+	Capsule::table('tblorders')
+		->where('id', $orderId)
+		->update(['status' => 'Waiting for Bitcoin Confirmation']);
+	}
+
+	/*
+	 * Get order id by invoice id
+	 */
+	public function getOrderIdByInvoiceId($invoiceId) {
+		return Capsule::table('tblorders')
+			->where('invoiceid', $invoiceId)
+			->value('id');
+	}
+
+
+	/*
 	 * Get new address from Blockonomics Api
 	 */
 	public function getNewBitcoinAddress() {

@@ -56,8 +56,14 @@ $ca->assign('btc_amount', $btc_amount / 1.0e8);
 /*
  * ÁDD ORDER TO DB
  */
-
 $blockonomics->insertOrderToDb($order_id, $btc_address, $fiat_amount, $btc_amount);
+
+/*
+ * UPDATE ORDER STATUS
+ */
+$true_order_id = $blockonomics->getOrderIdByInvoiceId($order_id);
+$blockonomics->updateOrderStatus($true_order_id);
+
 
 /**
  * Set a context for sidebars
