@@ -46,6 +46,10 @@
 	color: #666;
 }
 
+#address-error {
+	padding: 2em;
+}
+
 .red {
 	color: #FF0000;
 }
