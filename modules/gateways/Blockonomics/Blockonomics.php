@@ -98,9 +98,23 @@ class Blockonomics {
 	 * Update order status to 'Waiting for Bitcoin Confirmation'
 	 */
 	public function updateOrderStatus($orderId) {
-	Capsule::table('tblorders')
-		->where('id', $orderId)
-		->update(['status' => 'Waiting for Bitcoin Confirmation']);
+		Capsule::table('tblorders')
+			->where('id', $orderId)
+			->update(['status' => 'Waiting for Bitcoin Confirmation']);
+	}
+
+	/*
+	 * Update order status to 'Waiting for Bitcoin Confirmation'
+	 */
+	public function updateOrderNote($orderId, $txid, $addr) {
+
+		$note = "Bitcoin transaction id: $txid \r" .
+		"You can view the transaction at:\r" .
+		"https://www.blockonomics.co/api/tx?txid=$txid&addr=$addr";
+
+		Capsule::table('tblorders')
+			->where('id', $orderId)
+			->update(['notes' => $note]);
 	}
 
 	/*

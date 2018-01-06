@@ -49,6 +49,8 @@ $bits = $order['bits'];
 
 if($status == 0) {
     $blockonomics->updateOrderInDb($addr, $txid, $status, $value);
+    $true_order_id = $blockonomics->getOrderIdByInvoiceId($invoiceId);
+    $blockonomics->updateOrderNote($true_order_id, $txid, $addr);
     die();
 }
 
