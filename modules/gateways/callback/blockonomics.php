@@ -18,7 +18,7 @@ $gatewayParams = getGatewayVariables($gatewayModuleName);
 
 // Die if module is not active.
 if (!$gatewayParams['type']) {
-    die("Module Not Activated");
+	die("Module Not Activated");
 }
 
 // Retrieve data returned in payment gateway callback
@@ -35,11 +35,11 @@ $secret_value = $blockonomics->getCallbackSecret();
 $secret_value = substr($secret_value, -40);
 
 if ($secret_value != $secret) {
-    $transactionStatus = 'Secret verification failure';
-    $success = false;
+	$transactionStatus = 'Secret verification failure';
+	$success = false;
 
-    echo "Verification error";
-    die();
+	echo "Verification error";
+	die();
 }
 
 $order = $blockonomics->getOrderByAddress($addr);
@@ -48,15 +48,35 @@ $transactionId = $order['id'];
 $bits = $order['bits'];
 
 if($status == 0) {
-    $blockonomics->updateOrderInDb($addr, $txid, $status, $value);
-    $true_order_id = $blockonomics->getOrderIdByInvoiceId($invoiceId);
-    $blockonomics->updateOrderNote($true_order_id, $txid, $addr);
-    die();
+
+	$orderNote = "Bitcoin transaction id: $txid \r" .
+		"You can view the transaction at:\r" .
+		"https://www.blockonomics.co/api/tx?txid=$txid&addr=$addr";
+
+
+	$invoiceNote = "<b>Waiting for confirmation</b>\r\r" .
+		"Bitcoin transaction id:\r" .
+		"<a target=\"_blank\" href=\"https://www.blockonomics.co/api/tx?txid=$txid&addr=$addr\">$txid</a>";
+
+	$blockonomics->updateOrderInDb($addr, $txid, $status, $value);
+	$true_order_id = $blockonomics->getOrderIdByInvoiceId($invoiceId);
+	$blockonomics->updateOrderNote($true_order_id, $orderNote);
+	$blockonomics->updateInvoiceNote($invoiceId, $invoiceNote);
+	die();
 }
 
 if($status != 2 || $value < $bits) {
-    die();
+	die();
 }
+
+$invoiceNote = "Bitcoin transaction id:\r" .
+	"<a target=\"_blank\" href=\"https://www.blockonomics.co/api/tx?txid=$txid&addr=$addr\">$txid</a>";
+
+$blockonomics->updateInvoiceNote($invoiceId, $invoiceNote);
+
+$true_order_id = $blockonomics->getOrderIdByInvoiceId($invoiceId);
+$order_status = 'Active';
+$blockonomics->updateOrderStatus($true_order_id, $order_status);
 
 $blockonomics->updateOrderInDb($addr, $txid, $status, $value);
 
@@ -114,9 +134,9 @@ logTransaction($gatewayParams['name'], $_POST, $transactionStatus);
  * @param string $gatewayModule  Gateway module name
  */
 addInvoicePayment(
-    $invoiceId,
-    $transactionId,
-    $paymentAmount,
-    $paymentFee,
-    $gatewayModuleName
+	$invoiceId,
+	$transactionId,
+	$paymentAmount,
+	$paymentFee,
+	$gatewayModuleName
 );

@@ -62,7 +62,8 @@ $blockonomics->insertOrderToDb($order_id, $btc_address, $fiat_amount, $btc_amoun
  * UPDATE ORDER STATUS
  */
 $true_order_id = $blockonomics->getOrderIdByInvoiceId($order_id);
-$blockonomics->updateOrderStatus($true_order_id);
+$order_status = 'Waiting for Bitcoin Confirmation';
+$blockonomics->updateOrderStatus($true_order_id, $order_status);
 
 
 /**
