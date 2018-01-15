@@ -13,8 +13,13 @@ function blockonomics_config() {
 			var inputFields = document.getElementsByName('field[ApiSecret]');
 			inputFields.forEach(function(element) {
 				element.readOnly = true;
-				element.style.maxWidth = "600px";
 			});
+
+			var inputLabels = document.getElementsByClassName('fieldlabel');
+
+			for(var i = 0; i < inputLabels.length; i++) {
+				inputLabels[i].style.paddingRight = '20px';
+			}
 		</script>
 HTML;
 
