@@ -185,9 +185,9 @@ class Blockonomics {
 				Capsule::schema()->create( 'blockonomics_bitcoin_orders', function ($table) {
 							$table->increments('id');
 							$table->integer('id_order');
+							$table->text('txid');
 							$table->integer('timestamp');
 							$table->text('addr');
-							$table->text('txid');
 							$table->integer('status');
 							$table->float('value');
 							$table->integer('bits');
@@ -222,8 +222,8 @@ class Blockonomics {
 			Capsule::table('blockonomics_bitcoin_orders')->insert(
 				[
 					'id_order' => $id_order,
-					'timestamp' => time(),
 					'addr' => $address,
+					'timestamp' => time(),
 					'status' => -1,
 					'value' => $value,
 					'bits' => $bits,
