@@ -10,3 +10,5 @@ Accept bitcoins on your WHMCS, payments go directly into your wallet
 - Go to your WHMCS admin, Setup -> Payments -> Payment Gateways
 - Activate Blockonomics in All Payment Gateways
 - Set you API key in Manage Existing Gateways
+- After setting API Key refresh page
+- Copy your Callback to Blockonomics Merchants > Settings
