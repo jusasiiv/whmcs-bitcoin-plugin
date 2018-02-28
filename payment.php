@@ -75,7 +75,7 @@ Menu::addContext();
 
 
 # Define the template filename to be used without the .tpl extension
-$ca->setTemplate('payment');
+$ca->setTemplate('../blockonomics/payment');
 
 $ca->output();
 
