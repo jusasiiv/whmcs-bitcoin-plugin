@@ -62,6 +62,7 @@ if($status == 0) {
 	$true_order_id = $blockonomics->getOrderIdByInvoiceId($invoiceId);
 	$blockonomics->updateOrderNote($true_order_id, $orderNote);
 	$blockonomics->updateInvoiceNote($invoiceId, $invoiceNote);
+	$blockonomics->updateInvoiceStatus($invoiceId, "Payment Pending");
 	die();
 }
 
