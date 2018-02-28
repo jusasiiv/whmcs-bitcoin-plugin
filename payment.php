@@ -14,10 +14,10 @@ $blockonomics = new Blockonomics();
 
 $ca = new ClientArea();
 
-$ca->setPageTitle('Blockonomics Bitcoin Payment');
+$ca->setPageTitle('Bitcoin Payment');
 
 $ca->addToBreadCrumb('index.php', Lang::trans('globalsystemname'));
-$ca->addToBreadCrumb('payment.php', 'Blockonomics Bitcoin Payment');
+$ca->addToBreadCrumb('payment.php', 'Bitcoin Payment');
 
 $ca->initPage();
 
@@ -75,7 +75,7 @@ Menu::addContext();
 
 
 # Define the template filename to be used without the .tpl extension
-$ca->setTemplate('payment');
+$ca->setTemplate('../blockonomics/payment');
 
 $ca->output();
 

@@ -100,6 +100,15 @@ class Blockonomics {
 	}
 
 	/*
+	 * Update invoice status
+	 */
+	public function updateInvoiceStatus($invoiceId, $status) {
+		Capsule::table('tblinvoices')
+			->where('id', $invoiceId)
+			->update(['status' => $status]);
+	}
+
+	/*
 	 * Update order note
 	 */
 	public function updateOrderNote($orderId, $note) {
