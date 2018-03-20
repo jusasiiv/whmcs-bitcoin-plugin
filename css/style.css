@@ -7,45 +7,6 @@
 	text-align: center;	
 }
 
-#address-div, #amount-div {
-	float: left;
-	max-width: 250px;
-}
-
-#amount-div {
-	float: left;
-  margin-left: 5em;
-}
-
-#address-div h4, #amount-div h4 {
-	color: #767676;
-	font-size: 1em;
-	font-weight: 800;
-	letter-spacing: 0.05em;
-	text-transform: uppercase;
-  text-align: center;
-}
-
-#amount-div h5 {
-	line-height: 1.1;
-	font-size: 1.6rem;
-	margin-top: 2rem;
-	margin-bottom: 2rem;
-	font-weight: 500;
-}
-
-#btc-address-label {
-	text-align: center;
-	width: 100%;
-	border: 1px solid grey;
-	box-shadow: none;
-	background-color: unset;
-	font-size: 1.2em;
-	padding: 0.5em 2em 0.5em 2em;
-	max-width: 500px;
-	color: #666;
-}
-
 #address-error {
 	padding: 2em;
 }
@@ -54,42 +15,91 @@
 	color: #FF0000;
 }
 
-.left {
-	float: left;
-}
-
-.right {
-	float: right;
-}
-
-.big-text {
-	font-size: 1.5em;
-}
-
 .clear {
 	clear: both;
 }
 
-.padding {
-	padding: 1em;
+.center {
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;	
 }
 
-@media (max-width: 601px) {
-	#payment-view {
-		text-align: center;
-	}
-	#address-div, #amount-div {
-		float: none;
-		max-width: none;
-		margin-left: 0;
-	}
-	#amount-div h5 {
-		text-align: center;
-	}
+.payment-wrapper {
+	max-width: 54em;
 }
 
-@media (max-width: 430px) {
-	#btc-address-label {
-		font-size: 1em;
-	}
+.payment-wrapper h3 {
+	float: right;
+}
+
+.info {
+	float: right;
+}
+
+.info h2 {
+	margin-bottom: 0.3em;
+	margin-top: 0;
+}
+
+.info p {
+	margin-top: 0.5em;
+	margin-bottom: 0.7em;
+}
+
+.info .powered {
+	font-size: 0.6em;
+	margin-top: 1.8em;
+}
+
+.info .red {
+	font-size: 0.8em;
+}
+
+.qr-code-wrapper {
+	float: left;
+	margin: 1.2em;
+}
+
+.qr-code-wrapper p {
+	font-size: 0.6em;
+	margin-top: 2em;
+}
+
+.payment-wrapper hr {
+	width: 50px;
+	padding: 0;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.address {
+	border-style: solid;
+	border-width: 1px;
+	padding: 0.6em;
+	max-width: 31em;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.time-wrapper {
+	width: 100%;
+	height: 5px;
+	background: #ddd;
+	margin-bottom: 12px;
+	margin-top: 14px;
+	overflow: hidden;
+	position: relative;
+	max-width: 32.4em;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#time-left {
+	width: 100%;
+	height: 7px;
+	background: #666;
+	left: 0;
+	position: absolute;
+	top: 0;
 }

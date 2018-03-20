@@ -9,27 +9,35 @@
 <div id="btc-address" data-address="{$btc_address}"></div>
 <div id="system-url" data-url="{$system_url}" data-orderid="{$order_id}"></div>
 
-<h1>Order# {$order_id}</h1>
-<h2>To pay, send exact amount of BTC to the given address</h2>
+<div class="payment-wrapper center">
+	
+	<h3>Order# {$order_id}</h3>
+	<div class="clear"></div>
 
-<div id="address-div">
-	<h4>Bitcoin address</h4>
-	<a id="btc-address-a" href="bitcoin:{$btc_address}?amount={$btc_amount}">
-		<div id="qrcode"></div>
-	</a>
-	<h4>Click on the qr code above to open in wallet</h4>
+	<div class="qr-code-wrapper">
+		<a id="btc-address-a" href="bitcoin:{$btc_address}?amount={$btc_amount}">
+			<div id="qrcode"></div>
+		</a>
+		<p>Click on the QR code open in the wallet</p>
+	</div>
+
+	<div class="info center">
+		
+		<p>To confirm your order, please send the amount of <span>BTC</span> to the <b>given address</b></p>
+		<h2>{$btc_amount} BTC</h2>
+		<hr>
+		<p>&asymp; {$fiat_amount} {$currency}</p>
+		<div class="address"><b>{$btc_address}</b></div>
+
+    <div class="time-wrapper">
+       <div id="time-left"></div>
+		</div>
+
+		<p class="red">10:00 min left to pay your order</p>
+		<p class="powered">Powered by Blockonomics</p>
+
+	</div>
 </div>
-
-<div id="amount-div">
-		<h4>Amount</h4>
-		<h5>{$btc_amount} BTC ⇌ {$fiat_amount} {$currency}</h5>
-</div>
-
-<div class="clear"></div>
-
-<label id="btc-address-label">{$btc_address}</label>
-
-<h4>Powered by blockonomics</h4>
 
 {else}
 
