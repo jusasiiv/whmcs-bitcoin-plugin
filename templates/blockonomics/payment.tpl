@@ -3,7 +3,7 @@
 <script type="text/javascript" src="js/reconnecting-websocket.min.js"></script>
 <script type="text/javascript" src="js/payment.js"></script>
 
-{if $btc_address}
+{if not $error}
 
 <div id="btc-href" data-href="bitcoin:{$btc_address}?amount={$btc_amount}"></div>
 <div id="btc-address" data-address="{$btc_address}"></div>
@@ -43,7 +43,8 @@
 
 <div id="address-error">
     <h3>Could not generate new bitcoin address.</h3>
-    <i>Note to webmaster: Your webhost is blocking outgoing HTTPS connections. Blockonomics requires an outgoing HTTPS (port 443) to generate new address. Check with your webhost to allow this. Also make sure that <a href="https://www.crybit.com/enable-allow_url_fopen/" target="_blank">allow_url_fopen is On</a> on your server. If issue persists, log a ticket on <a href="https://blockonomics.freshdesk.com/support/solutions/articles/33000215104-troubleshooting-unable-to-generate-new-address" target="_blank">http://blockonomics.freshdesk.com/</a></i>
+    <i>Note to webmaster: {error_str} </i>
+    <i>If issue persists, log a ticket on <a href="https://blockonomics.freshdesk.com/support/solutions/articles/33000215104-troubleshooting-unable-to-generate-new-address" target="_blank">http://blockonomics.freshdesk.com/</a></i>
 </div>
 
 {/if}
