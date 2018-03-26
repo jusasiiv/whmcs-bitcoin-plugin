@@ -162,7 +162,7 @@ class Blockonomics {
 		$responseObj = json_decode($contents);
 
 		//Create response object if it does not exist
-		if (!isset($responseObj)) $responseObj = new stdClass();
+		if (!isset($responseObj)) $responseObj = new \stdClass();
 		$responseObj->{'response_code'} = $http_response_header[0];
 
 		return $responseObj;
@@ -295,7 +295,7 @@ class Blockonomics {
 			->value('value');
 	}
 
-	private function checkForErrors($responseObj) {
+	public function checkForErrors($responseObj) {
 
 		if(!isset($responseObj->response_code)) {
 				$error_str = 'Your webhost is blocking outgoing HTTPS connections. Blockonomics requires an outgoing HTTPS POST (port 443) to generate new address. Check with your webhosting provider to allow this.';
