@@ -38,6 +38,7 @@
 
 	</div>
 </div>
+<div class="clear"></div>
 
 {else}
 

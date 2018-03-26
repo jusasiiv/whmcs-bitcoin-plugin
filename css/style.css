@@ -26,7 +26,8 @@
 }
 
 .payment-wrapper {
-	max-width: 54em;
+    max-width: 54em;
+    margin-bottom: 2em;
 }
 
 .payment-wrapper h3 {
