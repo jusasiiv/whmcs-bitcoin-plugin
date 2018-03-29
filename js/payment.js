@@ -1,8 +1,8 @@
 window.onload = function() {
 
 	var totalProgress = 100;
-    var totalTime = 10*6; //10m
-    var currentTime = 10*6; //10m
+    var totalTime = 10*60; //10m
+    var currentTime = 10*60; //10m
     var currentProgress = 100;
 
 	var systemUrlDiv = document.getElementById("system-url");
