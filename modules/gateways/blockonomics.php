@@ -54,29 +54,11 @@ function blockonomics_link($params) {
 		die('[ERROR] In modules/gateways/Blockonomics.php::Blockonomics_link() function: Missing or invalid $params data.');
 	}
 
-	$blockonomics_params = array(
-		'order_id'         => $params['invoiceid'],
-		'price'            => number_format($params['amount'], 2, '.', ''),
-		'currency'         => $params['currency'],
-		'receive_currency' => $params['ReceiveCurrency'],
-		'cancel_url'       => $params['systemurl'] . '/clientarea.php',
-		'callback_url'     => $params['systemurl'] . '/modules/gateways/callback/Blockonomics.php',
-		'success_url'      => $params['systemurl'] . '/viewinvoice.php?id=' . $params['invoiceid'],
-		'title'            => $params['companyname'],
-		'description'      => $params['description']
-	);
+	$blockonomics = new Blockonomics();
+	$system_url = $blockonomics->getSystemUrl();
+	$form_url = $system_url . 'payment.php';
 
-	$authentication = array(
-		'app_id' => $params['AppID'],
-		'api_key' => $params['ApiKey'],
-		'api_secret' => $params['ApiSecret'],
-		'environment' => $params['Environment'],
-		'user_agent' => 'Blockonomics - WHMCS Extension',
-	);
-
-	//$order = \Blockonomics\Merchant\Order::createOrFail($blockonomics_params, array(), $authentication);
-
-	$form = '<form action="/whmcs/payment.php" method="POST">';
+	$form = '<form action="' . $form_url . '" method="POST">';
 	$form .= '<input type="hidden" name="price" value="'. $params['amount'] .'"/>';
 	$form .= '<input type="hidden" name="currency" value="'. $params['currency'] .'"/>';
 	$form .= '<input type="hidden" name="order_id" value="'. $params['invoiceid'] .'"/>';

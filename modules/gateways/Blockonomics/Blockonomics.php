@@ -6,10 +6,6 @@ use WHMCS\Database\Capsule;
 
 class Blockonomics {
 
-	// Set debug mode on or off
-	// In debug mode, create always the same address
-	const DEBUG = true;
-
 	/*
 	 * Try to get callback secret from db
 	 * If no secret exists, create new
@@ -104,6 +100,15 @@ class Blockonomics {
 	}
 
 	/*
+	 * Update invoice status
+	 */
+	public function updateInvoiceStatus($invoiceId, $status) {
+		Capsule::table('tblinvoices')
+			->where('id', $invoiceId)
+			->update(['status' => $status]);
+	}
+
+	/*
 	 * Update order note
 	 */
 	public function updateOrderNote($orderId, $note) {
@@ -136,10 +141,6 @@ class Blockonomics {
 	 */
 	public function getNewBitcoinAddress() {
 
-		if($this::DEBUG) {
-			return "15wQ3XgiwrATmB4bZ6mqPnK74Z37canz4W";
-		}
-
 		$api_key = $this->getApiKey();
 		$secret = $this->getCallbackSecret();
 
@@ -151,20 +152,20 @@ class Blockonomics {
 			'http' => [
 				'header'  => 'Authorization: Bearer ' . $api_key,
 				'method'  => 'POST',
-				'content' => ''
+				'content' => '',
+				'ignore_errors' => true
 			]
 		];
 
-		try {
-			$context = stream_context_create($options);
-			$separator = '?reset=1&';
-			$contents = file_get_contents('https://www.blockonomics.co/api/new_address'.$separator."match_callback=$secret", false, $context);
-			$new_address = json_decode($contents);
-		} catch (\Exception $e) {
-			echo "Error getting new address from Blockonomics! {$e->getMessage()}";
-		}
+		$context = stream_context_create($options);
+		$contents = file_get_contents("https://www.blockonomics.co/api/new_address?match_callback=$secret", false, $context);
+		$responseObj = json_decode($contents);
 
-		return $new_address->address;
+		//Create response object if it does not exist
+		if (!isset($responseObj)) $responseObj = new \stdClass();
+		$responseObj->{'response_code'} = $http_response_header[0];
+
+		return $responseObj;
 	}
 
 	/*
@@ -194,9 +195,9 @@ class Blockonomics {
 				Capsule::schema()->create( 'blockonomics_bitcoin_orders', function ($table) {
 							$table->increments('id');
 							$table->integer('id_order');
+							$table->text('txid');
 							$table->integer('timestamp');
 							$table->text('addr');
-							$table->text('txid');
 							$table->integer('status');
 							$table->float('value');
 							$table->integer('bits');
@@ -231,8 +232,8 @@ class Blockonomics {
 			Capsule::table('blockonomics_bitcoin_orders')->insert(
 				[
 					'id_order' => $id_order,
-					'timestamp' => time(),
 					'addr' => $address,
+					'timestamp' => time(),
 					'status' => -1,
 					'value' => $value,
 					'bits' => $bits,
@@ -292,6 +293,63 @@ class Blockonomics {
 		return Capsule::table('tblconfiguration')
 			->where('setting', 'SystemURL')
 			->value('value');
+	}
+
+	public function checkForErrors($responseObj) {
+
+		if(!isset($responseObj->response_code)) {
+				$error_str = 'Your webhost is blocking outgoing HTTPS connections. Blockonomics requires an outgoing HTTPS POST (port 443) to generate new address. Check with your webhosting provider to allow this.';
+
+		} elseif(!ini_get('allow_url_fopen')) {
+				$error_str = 'The allow_url_fopen is not enabled, please enable this option to allow address generation.';
+
+		} else {
+
+				switch ($responseObj->response_code) {
+
+					case 'HTTP/1.1 200 OK':
+							break;
+
+					case 'HTTP/1.1 401 Unauthorized': {
+							$error_str = 'API Key is incorrect. Make sure that the API key set in admin Blockonomics module configuration is correct.';
+							break;
+					}
+
+					case 'HTTP/1.1 500 Internal Server Error': {
+
+						if(isset($responseObj->message)) {
+
+							$error_code = $responseObj->message;
+
+							switch ($error_code) {
+								case "Could not find matching xpub":
+										$error_str = 'There is a problem in the Callback URL. Make sure that you have set your Callback URL from the admin Blockonomics module configuration to your Merchants > Settings.';
+										break;
+								case "This require you to add an xpub in your wallet watcher":
+										$error_str = 'There is a problem in the XPUB. Make sure that the you have added an address to Wallet Wathcer > Address Wathcer. If you have added an address make sure that it is an XPUB address and not a Bitcoin address.';
+										break;
+								default:
+										$error_str = $responseObj->message;
+							}
+							break;
+						} else {
+								$error_str = $responseObj->response_code;
+								break;
+						}
+					}
+
+					default:
+							$error_str = $responseObj->response_code;
+							break;
+				}
+		}
+
+		if(isset($error_str)) {
+			return $error_str;
+		}
+
+		// No errors
+		return false;
 	}
 
 }

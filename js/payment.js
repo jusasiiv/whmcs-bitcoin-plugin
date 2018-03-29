@@ -1,5 +1,10 @@
 window.onload = function() {
 
+	var totalProgress = 100;
+    var totalTime = 10*60; //10m
+    var currentTime = 10*60; //10m
+    var currentProgress = 100;
+
 	var systemUrlDiv = document.getElementById("system-url");
 	var systemUrl = systemUrlDiv.dataset.url;
 	var orderId = systemUrlDiv.dataset.orderid;
@@ -31,4 +36,22 @@ window.onload = function() {
 		window.location.href = redirUrl;
 	}
 
+	var timeDiv = document.getElementById("time-left");
+	var minutesLeft = document.getElementById("time-left-minutes");
+	var date = new Date(null);
+
+	setInterval( function() { 
+		currentTime = currentTime - 1;
+		currentProgress = Math.floor(currentTime*totalProgress/totalTime);
+		timeDiv.style.width = "" + currentProgress + "%";
+
+		var result = new Date(currentTime * 1000).toISOString().substr(14, 5);
+		console.log(result);
+		minutesLeft.innerHTML = result;
+
+		if (currentTime == 0) {
+			document.getElementById("paywrapper").innerHTML = "<p>Payment expired, please place a new order</p>"
+		}
+
+	}, 1000);
 }
