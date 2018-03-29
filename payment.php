@@ -50,7 +50,7 @@ if ($error_str) {
 
 } else {
 
-	$btc_address = $responseObj->address;
+	$btc_address = $response_obj->address;
 	$ca->assign('btc_address', $btc_address);
 
 	/*

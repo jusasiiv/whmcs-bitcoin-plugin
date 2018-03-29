@@ -9,7 +9,7 @@
 <div id="btc-address" data-address="{$btc_address}"></div>
 <div id="system-url" data-url="{$system_url}" data-orderid="{$order_id}"></div>
 
-<div class="payment-wrapper center">
+<div id="paywrapper" class="payment-wrapper center">
 	
 	<h3>Order# {$order_id}</h3>
 	<div class="clear"></div>
@@ -33,7 +33,7 @@
        <div id="time-left"></div>
 		</div>
 
-		<p class="red">10:00 min left to pay your order</p>
+		<p><span id="time-left-minutes"></span> min left to pay your order</p>
 		<p class="powered">Powered by Blockonomics</p>
 
 	</div>
