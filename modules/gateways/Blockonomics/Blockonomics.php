@@ -91,6 +91,16 @@ class Blockonomics {
 	}
 
 	/*
+	 * Get user configured API key from database
+	 */
+	public function getAltcoins() {
+		return Capsule::table('tblpaymentgateways')
+			->where('gateway', 'blockonomics')
+			->where('setting', 'Altcoins')
+			->value('value');
+	}
+
+	/*
 	 * Update order status to 'Waiting for Bitcoin Confirmation'
 	 */
 	public function updateOrderStatus($orderId, $status) {

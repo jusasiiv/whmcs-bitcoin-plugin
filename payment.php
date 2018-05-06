@@ -33,6 +33,10 @@ if(!$fiat_amount || !$currency || !$order_id) {
 	exit;
 }
 
+// Check if Altcoins are enabled
+$altcoins = $blockonomics->getAltcoins();
+$ca->assign('altcoins', $altcoins);
+
 $ca->assign('fiat_amount', $fiat_amount);
 $ca->assign('currency', $currency);
 $ca->assign('order_id', $order_id);

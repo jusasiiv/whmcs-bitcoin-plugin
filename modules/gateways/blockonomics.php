@@ -8,7 +8,7 @@ function blockonomics_config() {
 
 	// When loading payment gateway setup page, disable editing of callback url field
 	add_hook('AdminAreaFooterOutput', 1, function($vars) {
-    return <<<HTML
+		return <<<HTML
 		<script type="text/javascript">
 			var inputFields = document.getElementsByName('field[ApiSecret]');
 			inputFields.forEach(function(element) {
@@ -44,7 +44,12 @@ HTML;
 			'FriendlyName' => 'Callback URL',
 			'Description'  => 'CALLBACK URL (Copy this url and set in <a target="_blank" href="https://www.blockonomics.co/merchants#/page6">Merchants</a>)',
 			'Type'         => 'text'
-		)
+		),
+		'Altcoins' => array(
+				'FriendlyName' => 'Altcoins enabled',
+				'Type' => 'yesno',
+				'Description' => 'Select if you want to accept altcoins via Shapeshift',
+		),
 	);
 }
 
