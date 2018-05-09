@@ -50,6 +50,8 @@ $bits = $order['bits'];
 if($status == 0) {
 
 	$orderNote = "Bitcoin transaction id: $txid \r" .
+		"Expected amount: $bits \r" .
+		"Paid amount: $value \r" .
 		"You can view the transaction at:\r" .
 		"https://www.blockonomics.co/api/tx?txid=$txid&addr=$addr";
 
@@ -63,23 +65,37 @@ if($status == 0) {
 	$blockonomics->updateOrderNote($true_order_id, $orderNote);
 	$blockonomics->updateInvoiceNote($invoiceId, $invoiceNote);
 	$blockonomics->updateInvoiceStatus($invoiceId, "Payment Pending");
+
 	die();
 }
 
-if($status != 2 || $value < $bits) {
+if($status != 2) {
 	die();
+}
+
+$true_order_id = $blockonomics->getOrderIdByInvoiceId($invoiceId);
+
+if($value < $bits) {
+	$orderNote = "NOTICE! PAID AMOUNT WAS LESS THAN EXPECTED \r" .
+		"Bitcoin transaction id: $txid \r" .
+		"Expected amount: $bits \r" .
+		"Paid amount: $value \r" .
+		"You can view the transaction at:\r" .
+		"https://www.blockonomics.co/api/tx?txid=$txid&addr=$addr";
+
+	$blockonomics->updateOrderNote($true_order_id, $orderNote);
 }
 
 $invoiceNote = "Bitcoin transaction id:\r" .
 	"<a target=\"_blank\" href=\"https://www.blockonomics.co/api/tx?txid=$txid&addr=$addr\">$txid</a>";
 
 $blockonomics->updateInvoiceNote($invoiceId, $invoiceNote);
-
-$true_order_id = $blockonomics->getOrderIdByInvoiceId($invoiceId);
 $order_status = 'Active';
 $blockonomics->updateOrderStatus($true_order_id, $order_status);
 
 $blockonomics->updateOrderInDb($addr, $txid, $status, $value);
+
+$transaction_unique_id = 'blockonomics_' . $transactionId;
 
 /**
  * Validate Callback Invoice ID.
@@ -108,7 +124,7 @@ $invoiceId = checkCbInvoiceID($invoiceId, $gatewayParams['name']);
  * @param string $transactionId Unique Transaction ID
  */
 
-checkCbTransID($transactionId);
+checkCbTransID($transaction_unique_id);
 /**
  * Log Transaction.
  *
@@ -121,7 +137,7 @@ checkCbTransID($transactionId);
  * @param string|array $debugData    Data to log
  * @param string $transactionStatus  Status
  */
-logTransaction($gatewayParams['name'], $_POST, $transactionStatus);
+logTransaction($gatewayParams['name'], $_GET, "Successful");
 
 /**
  * Add Invoice Payment.
@@ -136,7 +152,7 @@ logTransaction($gatewayParams['name'], $_POST, $transactionStatus);
  */
 addInvoicePayment(
 	$invoiceId,
-	$transactionId,
+	$transaction_unique_id,
 	$paymentAmount,
 	$paymentFee,
 	$gatewayModuleName

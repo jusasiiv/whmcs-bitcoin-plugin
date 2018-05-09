@@ -263,6 +263,7 @@ class Blockonomics {
 		try {
 			$existing_order = Capsule::table('blockonomics_bitcoin_orders')
 				->where('addr', $bitcoinAddress)
+				->orderBy('timestamp', 'desc')
 				->first();
 		} catch (\Exception $e) {
 				echo "Unable to select order from blockonomics_bitcoin_orders: {$e->getMessage()}";
