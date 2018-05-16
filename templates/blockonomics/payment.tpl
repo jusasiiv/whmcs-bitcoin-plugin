@@ -15,25 +15,11 @@
 	<h3>Order# {$order_id}</h3>
 	<div class="clear"></div>
 
-	<div class="qr-code-wrapper">
-		<a id="btc-address-a" href="bitcoin:{$btc_address}?amount={$btc_amount}">
-			<div id="qrcode"></div>
-		</a>
-		<p>Click on the QR code open in the wallet</p>
-
-		{if $altcoins}
-		<div class="bnomics-altcoin-pane">
-			<a onclick="pay_altcoins()" href="#"><img style="margin: auto;" src="https://shapeshift.io/images/shifty/small_dark_altcoins.png" class="ss-button"></a>
-		</div>
-		{/if}
-
-	</div>
-
 	<div class="info center">
 		
 		<p>To confirm your order, please send the amount of <span>BTC</span> to the <b>given address</b></p>
 		<h2>{$btc_amount} BTC</h2>
-		<hr>
+		<hr class="amount-seperator">
 		<p>&asymp; {$fiat_amount} {$currency}</p>
 		<div class="address"><b>{$btc_address}</b></div>
 
@@ -45,6 +31,23 @@
 		<p class="powered">Powered by Blockonomics</p>
 
 	</div>
+
+	<div class="qr-code-wrapper">
+		<a id="btc-address-a" href="bitcoin:{$btc_address}?amount={$btc_amount}">
+			<div id="qrcode"></div>
+		</a>
+		<p>Click on the QR code open in the wallet</p>
+	</div>
+
+	<div class="clear"></div>
+	{if $altcoins}
+	<hr class="altcoin">
+	<div class="bnomics-altcoin-pane">
+		<h4>Or you can</h4>
+		<a onclick="pay_altcoins()" href="#"><img style="margin: auto;" src="https://shapeshift.io/images/shifty/small_dark_altcoins.png" class="ss-button"></a>
+	</div>
+	{/if}
+
 </div>
 
 <div id="altcoin-waiting" class="row">

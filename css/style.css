@@ -29,6 +29,7 @@
 	right: 0;
 	position: relative;
 	text-align: center;	
+	width: 160px;
 }
 
 #address-error {
@@ -59,12 +60,12 @@
 }
 
 .info h2 {
-	margin-bottom: 0.3em;
+	margin-bottom: 0.1em;
 	margin-top: 0;
 }
 
 .info p {
-	margin-top: 0.5em;
+	margin-top: 0.1em;
 	margin-bottom: 0.7em;
 }
 
@@ -87,7 +88,7 @@
 	margin-top: 2em;
 }
 
-.payment-wrapper hr {
+.amount-seperator {
 	width: 50px;
 	padding: 0;
 	margin-top: 0;
@@ -97,7 +98,7 @@
 .address {
 	border-style: solid;
 	border-width: 1px;
-	padding: 0.6em;
+	padding: 0.3em;
 	max-width: 31em;
 	margin-left: auto;
 	margin-right: auto;
@@ -107,11 +108,11 @@
 	width: 100%;
 	height: 5px;
 	background: #ddd;
-	margin-bottom: 12px;
+	margin-bottom: 11px;
 	margin-top: 14px;
 	overflow: hidden;
 	position: relative;
-	max-width: 32.4em;
+	max-width: 30.8em;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -144,4 +145,21 @@
   width: 60px;
   height: 60px;
   animation: rotate 1.4s infinite ease-in-out, background 1.4s infinite ease-in-out alternate;
+}
+
+.altcoin {
+	width: 100%;
+	margin: inherit;
+}
+
+@media (max-width: 990px) {
+  .info, .qr-code-wrapper, .payment-wrapper h3 {
+    float: none;
+  }
+  .qr-code-wrapper .powered {
+    display: block;
+  }
+  .info .powered {
+    display: none;
+  }
 }
