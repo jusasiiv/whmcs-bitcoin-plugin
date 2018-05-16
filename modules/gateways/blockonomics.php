@@ -27,7 +27,6 @@ HTML;
 
 	$blockonomics = new Blockonomics();
 	$blockonomics->createOrderTableIfNotExist();
-	$blockonomics->addOrderStatusIfNotExists();
 	$secret_value = $blockonomics->getCallbackSecret();
 	
 	return array(

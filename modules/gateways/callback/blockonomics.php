@@ -49,9 +49,8 @@ $bits = $order['bits'];
 
 if($status == 0) {
 
-	$orderNote = "Bitcoin transaction id: $txid \r" .
-		"Expected amount: $bits \r" .
-		"Paid amount: $value \r" .
+	$orderNote = "Waiting for Confirmation on Bitcoin network \r" .
+		"Bitcoin transaction id: $txid \r" .
 		"You can view the transaction at:\r" .
 		"https://www.blockonomics.co/api/tx?txid=$txid&addr=$addr";
 
@@ -75,24 +74,30 @@ if($status != 2) {
 
 $true_order_id = $blockonomics->getOrderIdByInvoiceId($invoiceId);
 
-if($value < $bits) {
-	$orderNote = "NOTICE! PAID AMOUNT WAS LESS THAN EXPECTED \r" .
-		"Bitcoin transaction id: $txid \r" .
-		"Expected amount: $bits \r" .
-		"Paid amount: $value \r" .
-		"You can view the transaction at:\r" .
-		"https://www.blockonomics.co/api/tx?txid=$txid&addr=$addr";
+$expected = $bits / 1.0e8;
+$paid = $value / 1.0e8;
+$orderNote = "";
+$order_status = 'Active';
 
-	$blockonomics->updateOrderNote($true_order_id, $orderNote);
+if($value < $bits) {
+	$orderNote .= "Warning: Invoice cancelled as Paid Amount was less than expected\r";
+	$blockonomics->updateInvoiceStatus($invoiceId, "Cancelled");
+	$order_status = 'Cancelled';
 }
+
+$orderNote .= "Bitcoin transaction id: $txid\r" .
+	"Expected amount: $expected BTC\r" .
+	"Paid amount: $paid BTC\r" .
+	"You can view the transaction at:\r" .
+	"https://www.blockonomics.co/api/tx?txid=$txid&addr=$addr";
+
+$blockonomics->updateOrderNote($true_order_id, $orderNote);
 
 $invoiceNote = "Bitcoin transaction id:\r" .
 	"<a target=\"_blank\" href=\"https://www.blockonomics.co/api/tx?txid=$txid&addr=$addr\">$txid</a>";
 
 $blockonomics->updateInvoiceNote($invoiceId, $invoiceNote);
-$order_status = 'Active';
 $blockonomics->updateOrderStatus($true_order_id, $order_status);
-
 $blockonomics->updateOrderInDb($addr, $txid, $status, $value);
 
 $transaction_unique_id = 'blockonomics_' . $transactionId;
