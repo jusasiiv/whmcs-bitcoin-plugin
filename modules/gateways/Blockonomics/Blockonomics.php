@@ -54,33 +54,6 @@ class Blockonomics {
 	}
 
 	/*
-	 * Generate new order status into the database if it does not exist
-	 */
-	public function addOrderStatusIfNotExists() {
-
-		try {
-			$order_status = Capsule::table('tblorderstatuses')
-					->where('title', 'Waiting for Bitcoin Confirmation')
-					->value('title');
-
-			if(!$order_status) {
-
-				Capsule::table('tblorderstatuses')->insert(
-					[
-						'title' => 'Waiting for Bitcoin Confirmation',
-						'color' => '#1a4d80',
-						'showpending' => 1,
-						'showactive' => 0,
-						'showcancelled' => 0,
-						'sortorder' => 50,
-					]);
-			}
-		} catch(\Exception $e) {
-			echo "Error, could not get Blockonomics secret from database. {$e->getMessage()}";
-		}
-	}
-
-	/*
 	 * Get user configured API key from database
 	 */
 	public function getApiKey() {
@@ -277,6 +250,29 @@ class Blockonomics {
 			"value" => $existing_order->value,
 			"bits" => $existing_order->bits,
 			"bits_payed" => $existing_order->bits_payed
+		);
+
+		return $row_in_array;
+	}
+
+	/*
+	 * Try to get order row from db by order id
+	 */
+	public function getOrderById($orderId) {
+		try {
+			$existing_order = Capsule::table('blockonomics_bitcoin_orders')
+				->where('id_order', $orderId)
+				->orderBy('timestamp', 'desc')
+				->first();
+		} catch (\Exception $e) {
+				echo "Unable to select order from blockonomics_bitcoin_orders: {$e->getMessage()}";
+		}
+
+		$row_in_array = array(
+			"id" => $existing_order->id,
+			"order_id" => $existing_order->id_order,
+			"address"=> $existing_order->addr,
+			"bits" => $existing_order->bits
 		);
 
 		return $row_in_array;
