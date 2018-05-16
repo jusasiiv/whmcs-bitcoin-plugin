@@ -42,40 +42,52 @@ $ca->assign('currency', $currency);
 $ca->assign('order_id', $order_id);
 $ca->assign('system_url', $system_url);
 
-/*
- * ADDRESS GENERATION
- */
-$response_obj = $blockonomics->getNewBitcoinAddress();
-$error_str = $blockonomics->checkForErrors($response_obj);
+$existing_order = $blockonomics->getOrderById($order_id);
 
-if ($error_str) {
 
-	$ca->assign('error', $error_str);
+// No order exists, create new and add to db
+if(is_null($existing_order['order_id'])) {
 
+	$response_obj = $blockonomics->getNewBitcoinAddress();
+	$error_str = $blockonomics->checkForErrors($response_obj);
+
+	if ($error_str) {
+
+		$ca->assign('error', $error_str);
+
+	} else {
+
+		$btc_address = $response_obj->address;
+		$ca->assign('btc_address', $btc_address);
+
+		/*
+		 * PRICE GENERATION
+		 */
+		$btc_amount = $blockonomics->getBitcoinAmount($fiat_amount, $currency);
+
+		$ca->assign('btc_amount', $btc_amount / 1.0e8);
+
+		/*
+		 * ADD ORDER TO DB
+		 */
+		$blockonomics->insertOrderToDb($order_id, $btc_address, $fiat_amount, $btc_amount);
+
+		/*
+		 * UPDATE ORDER STATUS
+		 */
+		/* REMOVED STATUS CHANGE
+		$true_order_id = $blockonomics->getOrderIdByInvoiceId($order_id);
+		$order_status = 'Waiting for Bitcoin Confirmation';
+		$blockonomics->updateOrderStatus($true_order_id, $order_status);
+		*/
+
+	}
 } else {
-
-	$btc_address = $response_obj->address;
+	$btc_address = $existing_order['address'];
 	$ca->assign('btc_address', $btc_address);
 
-	/*
-	 * PRICE GENERATION
-	 */
-	$btc_amount = $blockonomics->getBitcoinAmount($fiat_amount, $currency);
-
+	$btc_amount = $existing_order['bits'];
 	$ca->assign('btc_amount', $btc_amount / 1.0e8);
-
-	/*
-	 * ÁDD ORDER TO DB
-	 */
-	$blockonomics->insertOrderToDb($order_id, $btc_address, $fiat_amount, $btc_amount);
-
-	/*
-	 * UPDATE ORDER STATUS
-	 */
-	$true_order_id = $blockonomics->getOrderIdByInvoiceId($order_id);
-	$order_status = 'Waiting for Bitcoin Confirmation';
-	$blockonomics->updateOrderStatus($true_order_id, $order_status);
-
 }
 
 /**
