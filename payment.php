@@ -90,14 +90,6 @@ if(is_null($existing_order['order_id'])) {
 	$ca->assign('btc_amount', $btc_amount / 1.0e8);
 }
 
-/**
- * Set a context for sidebars
- *
- * @link http://docs.whmcs.com/Editing_Client_Area_Menus#Context
- */
-Menu::addContext();
-
-
 # Define the template filename to be used without the .tpl extension
 $ca->setTemplate('../blockonomics/payment');
 
