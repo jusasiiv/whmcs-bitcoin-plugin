@@ -55,7 +55,7 @@ if($status == 0) {
 		"https://www.blockonomics.co/api/tx?txid=$txid&addr=$addr";
 
 
-	$invoiceNote = "<b>Waiting for confirmation</b>\r\r" .
+	$invoiceNote = "<b>Waiting for Confirmation on Bitcoin network</b>\r\r" .
 		"Bitcoin transaction id:\r" .
 		"<a target=\"_blank\" href=\"https://www.blockonomics.co/api/tx?txid=$txid&addr=$addr\">$txid</a>";
 
