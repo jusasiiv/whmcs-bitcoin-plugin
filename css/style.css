@@ -152,6 +152,54 @@
 	margin: inherit;
 }
 
+.altcoin-select p {
+	margin-right: 0.5em;
+}
+
+.altcoin-select p, .altcoin-select button {
+	display: inline-block;
+}
+
+.altcoin-select .active {
+	color: white;
+	background-color: #b9b9b9;
+}
+
+.altcoin-select button:hover {
+	background-color: #939393;
+	color: white;
+}
+
+.altcoin-select button {
+	padding-bottom: 0.2em;
+	padding-top: 0.2em;
+	border: solid;
+	border-width: 1px;
+	border-color: #979797;
+	color: #a2a2a2;
+	background-color: #f4f4f4;
+	font-size: 1.2em;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+.altcoin-select button {
+	border-top-left-radius: 6px;
+	border-bottom-left-radius: 6px;
+}
+
+.altcoin-select button+button {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+	border-top-right-radius: 6px;
+	border-bottom-right-radius: 6px;
+}
+
+#bnomics-altcoin-pane {
+	display: none;
+}
+
+
 @media (max-width: 990px) {
   .info, .qr-code-wrapper, .payment-wrapper h3 {
     float: none;

@@ -72,3 +72,26 @@ function disableAltcoin() {
 	document.getElementById("altcoin-waiting").style.display = "none";
 	document.getElementById("paywrapper").style.display = "block";
 }
+
+function toggleCoin(coin) {
+
+	var btcBtn = document.getElementById('btc');
+	var altcoinBtn = document.getElementById('altcoin');
+
+	var btcDiv = document.getElementById('bnomics-btc-pane');
+	var altcoinDiv = document.getElementById('bnomics-altcoin-pane');
+
+	if(coin === 'btc') {
+		btcBtn.classList.add('active');
+		altcoinBtn.classList.remove('active');
+		btcDiv.style.display = "block";
+		altcoinDiv.style.display = "none";
+	}
+
+	if(coin === 'altcoin') {
+		btcBtn.classList.remove('active');
+		altcoinBtn.classList.add('active');
+		btcDiv.style.display = "none";
+		altcoinDiv.style.display = "block";
+	}
+}

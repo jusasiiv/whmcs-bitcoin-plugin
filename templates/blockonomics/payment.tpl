@@ -11,39 +11,51 @@
 <div id="system-url" data-url="{$system_url}" data-orderid="{$order_id}"></div>
 
 <div id="paywrapper" class="payment-wrapper center">
+
+	{if $altcoins}
+	<div class="altcoin-select">
+		<p>Pay with</p>
+		<button id="btc" onclick="toggleCoin('btc')" type="button" class="active"><b>BTC</b></button><!--
+---><button id="altcoin" onclick="toggleCoin('altcoin')" type="button"><b>Altcoins</b></button>
+	</div>
+	{/if}
 	
-	<h3>Order# {$order_id}</h3>
-	<div class="clear"></div>
+	<div id="bnomics-btc-pane">
+		<h3>Order# {$order_id}</h3>
+		<div class="clear"></div>
 
-	<div class="info center">
-		
-		<p>To confirm your order, please send the amount of <span>BTC</span> to the <b>given address</b></p>
-		<h2>{$btc_amount} BTC</h2>
-		<hr class="amount-seperator">
-		<p>&asymp; {$fiat_amount} {$currency}</p>
-		<div class="address"><b>{$btc_address}</b></div>
+		<div class="info center">
+			
+			<p>To confirm your order, please send the amount of <span>BTC</span> to the <b>given address</b></p>
+			<h2>{$btc_amount} BTC</h2>
+			<hr class="amount-seperator">
+			<p>&asymp; {$fiat_amount} {$currency}</p>
+			<div class="address"><b>{$btc_address}</b></div>
 
-    <div class="time-wrapper">
-       <div id="time-left"></div>
+	    <div class="time-wrapper">
+	       <div id="time-left"></div>
+			</div>
+
+			<p><span id="time-left-minutes"></span> min left to pay your order</p>
+			<p class="powered">Powered by Blockonomics</p>
+
 		</div>
 
-		<p><span id="time-left-minutes"></span> min left to pay your order</p>
-		<p class="powered">Powered by Blockonomics</p>
+		<div class="qr-code-wrapper">
+			<a id="btc-address-a" href="bitcoin:{$btc_address}?amount={$btc_amount}">
+				<div id="qrcode"></div>
+			</a>
+			<p>Click on the QR code open in the wallet</p>
+		</div>
 
+		<div class="clear"></div>
 	</div>
 
-	<div class="qr-code-wrapper">
-		<a id="btc-address-a" href="bitcoin:{$btc_address}?amount={$btc_amount}">
-			<div id="qrcode"></div>
-		</a>
-		<p>Click on the QR code open in the wallet</p>
-	</div>
-
-	<div class="clear"></div>
 	{if $altcoins}
-	<hr class="altcoin">
-	<div class="bnomics-altcoin-pane">
-		<h4>Or you can</h4>
+	<div id="bnomics-altcoin-pane" class="bnomics-altcoin-pane">
+		<h3>Order# {$order_id}</h3>
+		<div class="clear"></div>
+		<h4>To confirm your order, please click on the button below and choose your prefered Altcoin to pay the order.</h4>
 		<a onclick="pay_altcoins()" href="#"><img style="margin: auto;" src="https://shapeshift.io/images/shifty/small_dark_altcoins.png" class="ss-button"></a>
 	</div>
 	{/if}
