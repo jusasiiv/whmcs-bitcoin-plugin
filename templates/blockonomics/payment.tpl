@@ -57,6 +57,7 @@
 		<div class="clear"></div>
 		<h4>To confirm your order, please click on the button below and choose your prefered Altcoin to pay the order.</h4>
 		<a onclick="pay_altcoins()" href="#"><img style="margin: auto;" src="https://shapeshift.io/images/shifty/small_dark_altcoins.png" class="ss-button"></a>
+		<p class="powered">Powered by Blockonomics</p>
 	</div>
 	{/if}
 

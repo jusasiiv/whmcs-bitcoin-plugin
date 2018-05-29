@@ -70,7 +70,7 @@
 }
 
 .info .powered {
-	font-size: 0.6em;
+	font-size: 0.8em;
 	margin-top: 1.8em;
 }
 
@@ -84,7 +84,7 @@
 }
 
 .qr-code-wrapper p {
-	font-size: 0.6em;
+	font-size: 0.8em;
 	margin-top: 2em;
 }
 
@@ -195,10 +195,18 @@
 	border-bottom-right-radius: 6px;
 }
 
-#bnomics-altcoin-pane {
+.bnomics-altcoin-pane {
 	display: none;
 }
 
+.bnomics-altcoin-pane h4 {
+	margin-bottom: 1.5em;
+}
+
+.bnomics-altcoin-pane .powered {
+	font-size: 0.8em;
+	margin-top: 1em;
+}
 
 @media (max-width: 990px) {
   .info, .qr-code-wrapper, .payment-wrapper h3 {
