@@ -26,7 +26,7 @@
 
 		<div class="info center">
 			
-			<p>To confirm your order, please send the amount of <span>BTC</span> to the <b>given address</b></p>
+			<p>To pay, please send exact amount of <span>BTC</span> to the <b>given address</b></p>
 			<h2>{$btc_amount} BTC</h2>
 			<hr class="amount-seperator">
 			<p>&asymp; {$fiat_amount} {$currency}</p>
@@ -55,7 +55,7 @@
 	<div id="bnomics-altcoin-pane" class="bnomics-altcoin-pane">
 		<h3>Order# {$order_id}</h3>
 		<div class="clear"></div>
-		<h4>To confirm your order, please click on the button below and choose your prefered Altcoin to pay the order.</h4>
+		<h4>To pay, please click on the button below and choose your prefered Altcoin.</h4>
 		<a onclick="pay_altcoins()" href="#"><img style="margin: auto;" src="https://shapeshift.io/images/shifty/small_dark_altcoins.png" class="ss-button"></a>
 		<p class="powered">Powered by Blockonomics</p>
 	</div>
