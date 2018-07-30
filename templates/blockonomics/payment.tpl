@@ -55,8 +55,8 @@
 	<div id="bnomics-altcoin-pane" class="bnomics-altcoin-pane">
 		<h3>Order# {$order_id}</h3>
 		<div class="clear"></div>
-		<h4>To pay, please click on the button below and choose your prefered Altcoin.</h4>
-		<a onclick="pay_altcoins()" href="#"><img style="margin: auto;" src="https://shapeshift.io/images/shifty/small_dark_altcoins.png" class="ss-button"></a>
+		<h4>To pay, please click on the button below and choose your preferred Altcoin.</h4>
+		<a onclick="pay_altcoins()" href="#"><img style="margin: auto;" src="https://shapeshift.io/images/shifty/small_dark_altcoins.png" class="ss-button" alt="Altcoins via Shapeshift are not available in your region."></a>
 		<p class="powered">Powered by Blockonomics</p>
 	</div>
 	{/if}
