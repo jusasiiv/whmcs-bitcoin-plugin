@@ -63,7 +63,7 @@ if($status == 0) {
 	$true_order_id = $blockonomics->getOrderIdByInvoiceId($invoiceId);
 	$blockonomics->updateOrderNote($true_order_id, $orderNote);
 	$blockonomics->updateInvoiceNote($invoiceId, $invoiceNote);
-	$blockonomics->updateInvoiceStatus($invoiceId, "Payment Pending");
+	//$blockonomics->updateInvoiceStatus($invoiceId, "Payment Pending");
 
 	die();
 }
@@ -77,12 +77,11 @@ $true_order_id = $blockonomics->getOrderIdByInvoiceId($invoiceId);
 $expected = $bits / 1.0e8;
 $paid = $value / 1.0e8;
 $orderNote = "";
-$order_status = 'Active';
 
 if($value < $bits) {
 	$orderNote .= "Warning: Invoice cancelled as Paid Amount was less than expected\r";
 	$blockonomics->updateInvoiceStatus($invoiceId, "Cancelled");
-	$order_status = 'Cancelled';
+	$blockonomics->updateOrderStatus($true_order_id, 'Cancelled');
 }
 
 $orderNote .= "Bitcoin transaction id: $txid\r" .
@@ -97,7 +96,6 @@ $invoiceNote = "Bitcoin transaction id:\r" .
 	"<a target=\"_blank\" href=\"https://www.blockonomics.co/api/tx?txid=$txid&addr=$addr\">$txid</a>";
 
 $blockonomics->updateInvoiceNote($invoiceId, $invoiceNote);
-$blockonomics->updateOrderStatus($true_order_id, $order_status);
 $blockonomics->updateOrderInDb($addr, $txid, $status, $value);
 
 $transaction_unique_id = 'blockonomics_' . $transactionId;
@@ -143,6 +141,9 @@ checkCbTransID($transaction_unique_id);
  * @param string $transactionStatus  Status
  */
 logTransaction($gatewayParams['name'], $_GET, "Successful");
+
+$paymentAmount = '';
+$paymentFee = 0;
 
 /**
  * Add Invoice Payment.
