@@ -108,7 +108,7 @@
 	max-width: 31em;
 	margin-left: auto;
 	margin-right: auto;
-	width: 100%;
+	width: 90%;
 	background-color: #fff;
 	text-align: center;
 }
@@ -175,6 +175,10 @@
   width: 60px;
   height: 60px;
   animation: rotate 1.4s infinite ease-in-out, background 1.4s infinite ease-in-out alternate;
+}
+
+.content-copy{
+  vertical-align: text-bottom;
 }
 
 .altcoin {

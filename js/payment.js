@@ -344,3 +344,23 @@ function set_alt_status(status) {
 		}
 	}
 }
+
+function btc_copy_click() {
+    var copyText = document.getElementById("bitcoin_address");
+    copyText.select();
+    document.execCommand("copy");
+    document.getElementById("btc-copy-text").style.display = "block";
+    setTimeout(function() {
+        document.getElementById("btc-copy-text").style.display = "none";
+    }, 2000); 
+}
+
+function alt_copy_click() {
+	var copyText = document.getElementById("alt-address");
+    copyText.select();
+    document.execCommand("copy");
+    document.getElementById("alt-copy-text").style.display = "block";
+    setTimeout(function() {
+        document.getElementById("alt-copy-text").style.display = "none";
+    }, 2000);
+}

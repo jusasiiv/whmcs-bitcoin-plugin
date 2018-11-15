@@ -149,8 +149,9 @@
 							<h2>{$btc_amount} BTC</h2>
 							<hr class="amount-seperator">
 							<p>&asymp; {$fiat_amount} {$currency}</p>
-							<b><input class="address" value="{$btc_address}" readonly></b>
-
+							<b><input id="bitcoin_address" class="address" value="{$btc_address}" onclick="btc_copy_click()" readonly></b>
+							<i class="material-icons content-copy" onclick="btc_copy_click()">content_copy</i>
+							<div id="btc-copy-text" class="btc-copy-text copy-text">Copied to clipboard</div>
 					    <div class="time-wrapper">
 					       <div id="time-left"></div>
 							</div>
@@ -207,9 +208,9 @@
 		              <span class="bnomics-order-status-title">To confirm your order, please send the exact amount of <strong><span class="alt-coin"></span></strong> to the given address</span>
 		            </div>
 					<h2><span id="alt-amount"></span> <span id="alt-symbol"></span></h2>
-					<b><input id="alt-address" class="address"></b>
-					<!-- <i class="material-icons bnomics-copy-icon">file_copy</i> -->
-		              <div class="copy-text">Copied to clipboard</div>
+					<b><input id="alt-address" class="address" onclick="alt_copy_click()" readonly></b>
+					<i class="material-icons content-copy" onclick="alt_copy_click()">content_copy</i>
+		              <div id="alt-copy-text" class="alt-copy-text copy-text">Copied to clipboard</div>
 		              <div id="alt-time-wrapper">
 			              <div class="time-wrapper">
 					      	<div id="alt-time-left"></div>
