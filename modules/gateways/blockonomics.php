@@ -47,7 +47,7 @@ HTML;
 		'Altcoins' => array(
 				'FriendlyName' => 'Altcoins enabled',
 				'Type' => 'yesno',
-				'Description' => 'Select if you want to accept altcoins via Shapeshift',
+				'Description' => 'Select if you want to accept altcoins via Flyp.me',
 		),
 	);
 }
