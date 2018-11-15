@@ -131,23 +131,27 @@ class Blockonomics {
 		// Get last 40 chars of the secret string
 		$secret = substr($secret, -40);
 
-		$options = [
-			'http' => [
-				'header'  => 'Authorization: Bearer ' . $api_key,
-				'method'  => 'POST',
-				'content' => '',
-				'ignore_errors' => true
-			]
-		];
+		$ch = curl_init();
 
-		$context = stream_context_create($options);
-		$contents = file_get_contents("https://www.blockonomics.co/api/new_address?match_callback=$secret", false, $context);
+		curl_setopt($ch, CURLOPT_URL, "https://www.blockonomics.co/api/new_address?match_callback=".$secret);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+
+		$header = "Authorization: Bearer " . $api_key;
+		$headers = array();
+		$headers[] = $header;
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+		$contents = curl_exec($ch);
+		if (curl_errno($ch)) {
+		    echo 'Error:' . curl_error($ch);
+		}
+
 		$responseObj = json_decode($contents);
-
 		//Create response object if it does not exist
 		if (!isset($responseObj)) $responseObj = new \stdClass();
-		$responseObj->{'response_code'} = $http_response_header[0];
-
+		$responseObj->{'response_code'} = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		curl_close ($ch);
 		return $responseObj;
 	}
 	/*
@@ -164,9 +168,16 @@ class Blockonomics {
 	 */
 	public function getBitcoinAmount($fiat_amount, $currency) {
 		try {
-			$options = [ 'http' => [ 'method'  => 'GET'] ];
-			$context = stream_context_create($options);
-			$contents = file_get_contents('https://www.blockonomics.co/api/price' . "?currency=$currency", false, $context);
+			$ch = curl_init();
+
+			curl_setopt($ch, CURLOPT_URL, "https://www.blockonomics.co/api/price?currency=".$currency);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+			$contents = curl_exec($ch);
+			if (curl_errno($ch)) {
+			    echo 'Error:' . curl_error($ch);
+			}
+			curl_close ($ch);
 			$price = json_decode($contents)->price;
 			$margin = floatval($this->getMargin());
 			if($margin > 0){
@@ -373,15 +384,15 @@ class Blockonomics {
 
 				switch ($responseObj->response_code) {
 
-					case 'HTTP/1.1 200 OK':
+					case '200':
 							break;
 
-					case 'HTTP/1.1 401 Unauthorized': {
+					case '401': {
 							$error_str = 'API Key is incorrect. Make sure that the API key set in admin Blockonomics module configuration is correct.';
 							break;
 					}
 
-					case 'HTTP/1.1 500 Internal Server Error': {
+					case '500': {
 
 						if(isset($responseObj->message)) {
 

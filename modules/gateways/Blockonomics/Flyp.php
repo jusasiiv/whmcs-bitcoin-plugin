@@ -160,32 +160,22 @@ class FlypMe
     {
         $apiCall = self::$endpoint . $method;
 
-        // Create a stream
-        $opts = [
-            "http" => [
-                "method" => "GET",
-                "header" => "Content-Type: application/json\r\n"
-            ]
-        ];
+        $ch = curl_init();
 
-        $context = stream_context_create($opts);
+        curl_setopt($ch, CURLOPT_URL, $apiCall);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
-        // Open the file using the HTTP headers set above
-        $response = file_get_contents($apiCall, false, $context);
-        
-        $response = json_decode($response);
-        
-        //var_dump($response);
-        if(isset($response->errors)){
-            $responseString = "";
-            foreach ($response->errors as $key => $value) {
-                return $responseString .= "Error: ". $key . " - ". $value[0];
-            }
-        }elseif(isset($response)){
-            return $response;
-        }else{
+        $response = curl_exec($ch);
+        if (curl_errno($ch)) {
             return;
         }
+        curl_close ($ch);
+        $response = json_decode($response);
+
+        if(isset($response->errors)){
+            return;
+        }
+        return $response;
     }
     /**
      * @param string $method
@@ -198,31 +188,27 @@ class FlypMe
     {
         $apiCall = self::$endpoint . $method;
         $post = json_encode($body);
-        // Create a stream
-        $opts = [
-            "http" => [
-                "method" => "POST",
-                "header" => "Content-Type: application/json\r\n",
-                "content" => $post
-            ]
-        ];
+        //Curl
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $apiCall);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+        curl_setopt($ch, CURLOPT_POST, 1);
 
-        $context = stream_context_create($opts);
+        $headers = array();
+        $headers[] = "Content-Type: application/json";
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
-        // Open the file using the HTTP headers set above
-        $response = file_get_contents($apiCall, false, $context);
-        
+        $response = curl_exec($ch);
+        if (curl_errno($ch)) {
+            return;
+        }
+        curl_close ($ch);
         $response = json_decode($response);
 
         if(isset($response->errors)){
-            $responseString = "";
-            foreach ($response->errors as $key => $value) {
-                return $responseString .= "Error: ". $key . " - ". $value[0];
-            }
-        }elseif(isset($response)){
-            return $response;
-        }else{
             return;
         }
+        return $response;
     }
 }
