@@ -20,6 +20,14 @@ function blockonomics_config() {
 			for(var i = 0; i < inputLabels.length; i++) {
 				inputLabels[i].style.paddingRight = '20px';
 			}
+
+			var inputMargin = document.getElementsByName('field[Margin]');
+			inputMargin.forEach(function(element) {
+				element.type = 'number';
+				element.min = 0;
+				element.max = 4;
+				element.step = 0.01;
+			});
 		</script>
 HTML;
 
@@ -48,6 +56,13 @@ HTML;
 				'FriendlyName' => 'Altcoins enabled',
 				'Type' => 'yesno',
 				'Description' => 'Select if you want to accept altcoins via Flyp.me',
+		),
+		'Margin' => array(
+				'FriendlyName' => 'Extra Currency Rate Margin %',
+				'Type' => 'text',
+				'Size' => '5',
+				'Default' => 0,
+				'Description' => 'Increase live fiat to BTC rate by small percent',
 		),
 	);
 }

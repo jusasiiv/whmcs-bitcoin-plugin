@@ -150,7 +150,15 @@ class Blockonomics {
 
 		return $responseObj;
 	}
-
+	/*
+	 * Get user configured margin from database
+	 */
+	public function getMargin() {
+		return Capsule::table('tblpaymentgateways')
+			->where('gateway', 'blockonomics')
+			->where('setting', 'Margin')
+			->value('value');
+	}
 	/*
 	 * Convert fiat amount to BTC
 	 */
@@ -159,12 +167,16 @@ class Blockonomics {
 			$options = [ 'http' => [ 'method'  => 'GET'] ];
 			$context = stream_context_create($options);
 			$contents = file_get_contents('https://www.blockonomics.co/api/price' . "?currency=$currency", false, $context);
-			$price = json_decode($contents);
+			$price = json_decode($contents)->price;
+			$margin = floatval($this->getMargin());
+			if($margin > 0){
+				$price = $price * 100/(100+$margin);
+			}
 		} catch (\Exception $e) {
 			echo "Error getting price from Blockonomics! {$e->getMessage()}";
 		}
 
-		return intval(1.0e8 * $fiat_amount/$price->price);
+		return intval(1.0e8 * $fiat_amount/$price);
 	}
 
 	/*
