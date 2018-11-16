@@ -84,6 +84,7 @@ function bnomics_send_email(){
     $flypID             = $_REQUEST['uuid'];
     $flypCoin             = $_REQUEST['coin'];
     $flypSymbol             = $_REQUEST['symbol'];
+    $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
     $subject = $flypCoin . ' Payment Recieved';
 	$command = 'SendEmail';
 	$postData = array(
@@ -94,7 +95,7 @@ function bnomics_send_email(){
 	    'custommessage' => '<p>Your payment has been received. It will take a while for the network to confirm your order.</p>
 	    					<p>To view your payment status, copy and use the link below.</p>
 	     					<a href="{$link}">{$link}</a>',
-	    'customvars' => base64_encode(serialize(array("link"=>dirname(__FILE__) . '/payment.php?uuid='.$flypID))),
+	    'customvars' => base64_encode(serialize(array("link"=>$actual_link . '/payment.php?uuid='.$flypID))),
 	);
 	// For Versions before WHMCS 7.2
 	//$adminUsername = 'ADMIN_USERNAME'; // Enter Admin user name
