@@ -7,6 +7,7 @@
 
 {if $flyp_id}
 <div id="flyp-id" data-uuid="{$flyp_id}"></div>
+<div id="system-url" data-url="{$system_url}" data-orderid="{$order_id}"></div>
 <div class="alt-paywrapper center">
 	<!-- Waiting -->
 	<div id="alt_status_0" class="row"></div>

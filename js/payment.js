@@ -185,6 +185,8 @@ function infoOrder(uuid){
 function pay_altcoins() {
 	document.getElementById("altcoin-waiting").style.display = "block";
 	document.getElementById("paywrapper").style.display = "none";
+	var systemUrlDiv = document.getElementById("system-url");
+	var orderId = systemUrlDiv.dataset.orderid;
 	var altcoin_waiting = true;
 	email = 1;
 	document.getElementById("alt-qrcode").innerHTML = "";
@@ -260,7 +262,7 @@ function pay_altcoins() {
 			}, 1000);
 		}
 	};
-	order.open("GET", "flyp.php?action=create_order&altcoin="+document.getElementById("altcoin_select").value+"&amount="+btcAmount+"&address="+btcAddress+"&order_id=5", true);
+	order.open("GET", "flyp.php?action=create_order&altcoin="+document.getElementById("altcoin_select").value+"&amount="+btcAmount+"&address="+btcAddress+"&order_id="+orderId, true);
 	order.send();
 
 	var limits = new XMLHttpRequest();
