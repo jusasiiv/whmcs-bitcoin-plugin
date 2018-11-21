@@ -54,7 +54,7 @@
 	          	<h4><i class="material-icons bnomics-alt-icon">receipt</i></h4>
 	            <div class="bnomics-order-status-wrapper">
 	              <span class="bnomics-order-status-title">
-	              	<a class="alt-finish-url" href="#" target="_blank">View Order Confirmation</a>
+	              	<a class="alt-finish-url" href="viewinvoice.php?id={$order_id}&paymentsuccess=true" target="_blank">View Order Confirmation</a>
 	            </div>
 	          </div>
 			  <p class="powered">Powered by Blockonomics</p>
@@ -267,7 +267,7 @@
 	          	<h4><i class="material-icons bnomics-alt-icon">receipt</i></h4>
 	            <div class="bnomics-order-status-wrapper">
 	              <span class="bnomics-order-status-title">
-	              	<a class="alt-finish-url" href="#" target="_blank">View Order Confirmation</a>
+	              	<a class="alt-finish-url" href="viewinvoice.php?id={$order_id}&paymentsuccess=true" target="_blank">View Order Confirmation</a>
 	            </div>
 	          </div>
 			  <p class="powered">Powered by Blockonomics</p>
