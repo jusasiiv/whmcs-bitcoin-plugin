@@ -44,7 +44,7 @@ HTML;
 		),
 		'ApiKey' => array(
 			'FriendlyName' => 'API Key',
-			'Description'  => 'BLOCKONOMICS API KEY (Generate from <a target="_blank" href="https://www.blockonomics.co/blockonomics#/settings">Wallet Watcher</a> > Settings)  ',
+			'Description'  => 'BLOCKONOMICS API KEY (Click "Get Started For Free" on <a target="_blank" href="https://www.blockonomics.co/blockonomics#/merchants">Merchants</a> and follow setup wizard)  ',
 			'Type'         => 'text'
 		),
 		'ApiSecret' => array(
