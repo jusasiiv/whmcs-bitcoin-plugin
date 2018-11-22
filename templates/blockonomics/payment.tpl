@@ -10,7 +10,21 @@
 <div id="system-url" data-url="{$system_url}" data-orderid="{$order_id}"></div>
 <div class="alt-paywrapper center">
 	<!-- Waiting -->
-	<div id="alt_status_0" class="row"></div>
+	<div id="alt_status_0" class="row">
+		<div class="bnomics-btc-info">
+	        <div class="col-md-12">
+	          <div class="bnomics-altcoin-bg-color">
+	          	<h4>Waiting for Deposit</h4>
+	          	<h4><i class="material-icons bnomics-alt-icon">error</i></h4>
+	            <div class="bnomics-order-status-wrapper">
+	              <span class="bnomics-order-status-title">
+                	<p>This payment has not been sent.</p></span>
+	            </div>
+	          </div>
+			  <p class="powered">Powered by Blockonomics</p>
+        </div>
+   	  </div>
+	</div>
 	<!-- DEPOSIT_RECEIVED -->
 	<div id="alt_status_1" class="row">
 	      <div class="bnomics-btc-info">

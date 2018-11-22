@@ -80,14 +80,27 @@ function checkOrder(uuid){
 	        }
 	        if(response['status'] == "DEPOSIT_RECEIVED"){
 	          if(email == 1){
+	          	var systemUrlDiv = document.getElementById("system-url");
+				var orderId = systemUrlDiv.dataset.orderid;
 	            var send_email = new XMLHttpRequest();
 				send_email.onreadystatechange = function() {
 					if (this.readyState == 4 && this.status == 200) {
 						var response = JSON.parse(this.responseText);
 					}
 				};
-				send_email.open("GET", "flyp.php?action=send_email&uuid="+uuid+"&coin="+alt_coin[alt_coin.selectedIndex].value+"&symbol="+alt_coin[alt_coin.selectedIndex].id, true);
+				send_email.open("GET", "flyp.php?action=send_email&uuid="+uuid+"&coin="+alt_coin[alt_coin.selectedIndex].value+"&symbol="+alt_coin[alt_coin.selectedIndex].id+"&order_id="+orderId, true);
 				send_email.send();
+
+				var send_admin_email = new XMLHttpRequest();
+				send_email.onreadystatechange = function() {
+					if (this.readyState == 4 && this.status == 200) {
+						var response = JSON.parse(this.responseText);
+						console.log(response);
+					}
+				};
+				send_admin_email.open("GET", "flyp.php?action=send_admin_email&uuid="+uuid+"&coin="+alt_coin[alt_coin.selectedIndex].value+"&symbol="+alt_coin[alt_coin.selectedIndex].id+"&order_id="+orderId, true);
+				send_admin_email.send();
+
 				email = 0;
 	          }
 	          set_alt_status(1);
