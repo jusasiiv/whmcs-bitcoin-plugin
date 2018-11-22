@@ -92,10 +92,9 @@ function checkOrder(uuid){
 				send_email.send();
 
 				var send_admin_email = new XMLHttpRequest();
-				send_email.onreadystatechange = function() {
+				send_admin_email.onreadystatechange = function() {
 					if (this.readyState == 4 && this.status == 200) {
 						var response = JSON.parse(this.responseText);
-						console.log(response);
 					}
 				};
 				send_admin_email.open("GET", "flyp.php?action=send_admin_email&uuid="+uuid+"&coin="+alt_coin[alt_coin.selectedIndex].value+"&symbol="+alt_coin[alt_coin.selectedIndex].id+"&order_id="+orderId, true);
