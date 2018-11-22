@@ -24,9 +24,6 @@ if ( isset( $_REQUEST['action'] ) ) {
 	else if( $_REQUEST['action'] == "send_email" ) {
 		bnomics_send_email();
 	}
-    else if( $_REQUEST['action'] == "send_admin_email" ) {
-        bnomics_send_admin_email();
-    }
 }
 
 function bnomics_fetch_limit(){
@@ -107,31 +104,6 @@ function bnomics_send_email(){
 	$results = localAPI($command, $postData);
 
 	print_r(json_encode($results));
-    die();
-}
-
-function bnomics_send_admin_email(){
-    $flypID                 = $_REQUEST['uuid'];
-    $flypCoin               = $_REQUEST['coin'];
-    $flypSymbol             = $_REQUEST['symbol'];
-    $whmcs_invoice_id       = $_REQUEST['order_id'];
-    $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
-    $subject = 'Order #0 - ' . $flypCoin . ' Payment Recieved';
-    $command = 'SendAdminEmail';
-    $postData = array(
-        'messagename' => 'Altcoin Payment Recieved',
-        'type' => 'system',
-        'customsubject' => $subject,
-        'custommessage' => '<p>Order #0 - Payment has been received. It will take a while for the network to confirm the order.</p>
-                            <p>To view the payment status, copy and use the link below.</p>
-                            <a href="{$link}">{$link}</a>',
-        'mergefields' => array("link"=>$actual_link . '/payment.php?uuid='.$flypID),
-    );
-    // For Versions before WHMCS 7.2
-    //$adminUsername = 'ADMIN_USERNAME'; // Enter Admin user name
-    //$results = localAPI($command, $postData, $adminUsername);
-    $results = localAPI($command, $postData);
-    print_r(json_encode($results));
     die();
 }
 
