@@ -32,6 +32,16 @@
 	width: 160px;
 }
 
+#alt-qrcode img {
+	margin-left: auto;
+	margin-right: auto;
+	left: 0;
+	right: 0;
+	position: relative;
+	text-align: center;	
+	width: 160px;
+}
+
 #address-error {
 	padding: 2em;
 }
@@ -55,10 +65,6 @@
 	float: right;
 }
 
-.info {
-	float: right;
-}
-
 .info h2 {
 	margin-bottom: 0.1em;
 	margin-top: 0;
@@ -79,8 +85,8 @@
 }
 
 .qr-code-wrapper {
-	float: left;
-	margin: 1.2em;
+	padding: 1em;
+	background-color:#f3f3f3;
 }
 
 .qr-code-wrapper p {
@@ -102,6 +108,9 @@
 	max-width: 31em;
 	margin-left: auto;
 	margin-right: auto;
+	width: 90%;
+	background-color: #fff;
+	text-align: center;
 }
 
 .time-wrapper {
@@ -117,7 +126,20 @@
 	margin-right: auto;
 }
 
+.copy-text {
+	display:none;
+}
+
 #time-left {
+	width: 100%;
+	height: 7px;
+	background: #666;
+	left: 0;
+	position: absolute;
+	top: 0;
+}
+
+#alt-time-left {
 	width: 100%;
 	height: 7px;
 	background: #666;
@@ -136,6 +158,14 @@
   margin-bottom: 1em;
 }
 
+.no-right{
+	padding-right: 0px !important;
+}
+
+#alt_status_1, #alt_status_2, #alt_status_3, #alt_status_4, #alt_status_5, #alt_status_6, #alt_status_7{
+	display: none;
+}
+
 .altcoin-waiting h4 {
   margin-top: 1em;
 }
@@ -147,72 +177,77 @@
   animation: rotate 1.4s infinite ease-in-out, background 1.4s infinite ease-in-out alternate;
 }
 
+.content-copy{
+  vertical-align: text-bottom;
+}
+
 .altcoin {
 	width: 100%;
 	margin: inherit;
 }
 
-.altcoin-select p {
-	margin-right: 0.5em;
+.alt-paywrapper{
+	max-width: 54em;
 }
 
-.altcoin-select p, .altcoin-select button {
-	display: inline-block;
+.alt-paywrapper h3 {
+    float: right;
 }
 
-.altcoin-select .active {
-	color: white;
-	background-color: #b9b9b9;
+.bnomics-paywith-btc {
+  border-radius: 10px 0px 0px 10px;
 }
 
-.altcoin-select button:hover {
-	background-color: #939393;
-	color: white;
+.bnomics-paywith-altcoin {
+  border-radius: 0px 10px 10px 0px;
 }
 
-.altcoin-select button {
-	padding-bottom: 0.2em;
-	padding-top: 0.2em;
-	border: solid;
-	border-width: 1px;
-	border-color: #979797;
-	color: #a2a2a2;
-	background-color: #f4f4f4;
-	font-size: 1.2em;
-	padding-left: 1em;
-	padding-right: 1em;
+.bnomics-paywith-option {
+  color:#B9B9B9;
+  background-color:#F3F3F3;
+  border: 1px solid #B9B9B9;
+  padding: 8px 18px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
 }
 
-.altcoin-select button {
-	border-top-left-radius: 6px;
-	border-bottom-left-radius: 6px;
-}
-
-.altcoin-select button+button {
-	border-top-left-radius: 0;
-	border-bottom-left-radius: 0;
-	border-top-right-radius: 6px;
-	border-bottom-right-radius: 6px;
+.bnomics-paywith-selected {
+  color:#fff;
+  background-color:#B9B9B9;
 }
 
 .bnomics-altcoin-pane {
 	display: none;
+	padding-top: 20px;
 }
 
 .bnomics-altcoin-pane h4 {
 	margin-bottom: 1.5em;
 }
 
-.bnomics-altcoin-pane .powered {
+.powered {
 	font-size: 0.8em;
 	margin-top: 1em;
+}
+
+.bnomics-altcoin-bg-color{
+  background-color:#f3f3f3;
+  padding: 15px 10%;
+}
+
+.bnomics-alt-icon{
+  width: 100% !important;
+  font-size:60px !important;
+  margin: 25px 0px !important;
 }
 
 @media (max-width: 990px) {
   .info, .qr-code-wrapper, .payment-wrapper h3 {
     float: none;
   }
-  .qr-code-wrapper .powered {
+  .powered {
     display: block;
   }
   .info .powered {

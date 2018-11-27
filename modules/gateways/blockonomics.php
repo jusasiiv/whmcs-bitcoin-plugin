@@ -20,6 +20,14 @@ function blockonomics_config() {
 			for(var i = 0; i < inputLabels.length; i++) {
 				inputLabels[i].style.paddingRight = '20px';
 			}
+
+			var inputMargin = document.getElementsByName('field[Margin]');
+			inputMargin.forEach(function(element) {
+				element.type = 'number';
+				element.min = 0;
+				element.max = 4;
+				element.step = 0.01;
+			});
 		</script>
 HTML;
 
@@ -36,7 +44,7 @@ HTML;
 		),
 		'ApiKey' => array(
 			'FriendlyName' => 'API Key',
-			'Description'  => 'BLOCKONOMICS API KEY (Generate from <a target="_blank" href="https://www.blockonomics.co/blockonomics#/settings">Wallet Watcher</a> > Settings)  ',
+			'Description'  => 'BLOCKONOMICS API KEY (Click "Get Started For Free" on <a target="_blank" href="https://www.blockonomics.co/blockonomics#/merchants">Merchants</a> and follow setup wizard)  ',
 			'Type'         => 'text'
 		),
 		'ApiSecret' => array(
@@ -47,7 +55,14 @@ HTML;
 		'Altcoins' => array(
 				'FriendlyName' => 'Altcoins enabled',
 				'Type' => 'yesno',
-				'Description' => 'Select if you want to accept altcoins via Shapeshift',
+				'Description' => 'Select if you want to accept altcoins via Flyp.me',
+		),
+		'Margin' => array(
+				'FriendlyName' => 'Extra Currency Rate Margin %',
+				'Type' => 'text',
+				'Size' => '5',
+				'Default' => 0,
+				'Description' => 'Increase live fiat to BTC rate by small percent',
 		),
 	);
 }

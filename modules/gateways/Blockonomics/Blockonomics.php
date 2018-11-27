@@ -131,40 +131,63 @@ class Blockonomics {
 		// Get last 40 chars of the secret string
 		$secret = substr($secret, -40);
 
-		$options = [
-			'http' => [
-				'header'  => 'Authorization: Bearer ' . $api_key,
-				'method'  => 'POST',
-				'content' => '',
-				'ignore_errors' => true
-			]
-		];
+		$ch = curl_init();
 
-		$context = stream_context_create($options);
-		$contents = file_get_contents("https://www.blockonomics.co/api/new_address?match_callback=$secret", false, $context);
+		curl_setopt($ch, CURLOPT_URL, "https://www.blockonomics.co/api/new_address?match_callback=".$secret);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+
+		$header = "Authorization: Bearer " . $api_key;
+		$headers = array();
+		$headers[] = $header;
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+		$contents = curl_exec($ch);
+		if (curl_errno($ch)) {
+		    echo 'Error:' . curl_error($ch);
+		}
+
 		$responseObj = json_decode($contents);
-
 		//Create response object if it does not exist
 		if (!isset($responseObj)) $responseObj = new \stdClass();
-		$responseObj->{'response_code'} = $http_response_header[0];
-
+		$responseObj->{'response_code'} = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		curl_close ($ch);
 		return $responseObj;
 	}
-
+	/*
+	 * Get user configured margin from database
+	 */
+	public function getMargin() {
+		return Capsule::table('tblpaymentgateways')
+			->where('gateway', 'blockonomics')
+			->where('setting', 'Margin')
+			->value('value');
+	}
 	/*
 	 * Convert fiat amount to BTC
 	 */
 	public function getBitcoinAmount($fiat_amount, $currency) {
 		try {
-			$options = [ 'http' => [ 'method'  => 'GET'] ];
-			$context = stream_context_create($options);
-			$contents = file_get_contents('https://www.blockonomics.co/api/price' . "?currency=$currency", false, $context);
-			$price = json_decode($contents);
+			$ch = curl_init();
+
+			curl_setopt($ch, CURLOPT_URL, "https://www.blockonomics.co/api/price?currency=".$currency);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+			$contents = curl_exec($ch);
+			if (curl_errno($ch)) {
+			    echo 'Error:' . curl_error($ch);
+			}
+			curl_close ($ch);
+			$price = json_decode($contents)->price;
+			$margin = floatval($this->getMargin());
+			if($margin > 0){
+				$price = $price * 100/(100+$margin);
+			}
 		} catch (\Exception $e) {
 			echo "Error getting price from Blockonomics! {$e->getMessage()}";
 		}
 
-		return intval(1.0e8 * $fiat_amount/$price->price);
+		return intval(1.0e8 * $fiat_amount/$price);
 	}
 
 	/*
@@ -185,14 +208,18 @@ class Blockonomics {
 							$table->float('value');
 							$table->integer('bits');
 							$table->integer('bits_payed');
+							$table->text('flyp_id');
 						}
 				);
 			} catch (\Exception $e) {
 					echo "Unable to create blockonomics_bitcoin_orders: {$e->getMessage()}";
 			}
+		}else if(!Capsule::schema()->hasColumn('blockonomics_bitcoin_orders', 'flyp_id')){
+			 Capsule::schema()->table('blockonomics_bitcoin_orders', function($table){
+			 	$table->text('flyp_id');
+			 });
 		}
 	}
-
 	/*
 	 * Try to insert new order to database
 	 * If order exists, return with false
@@ -256,6 +283,33 @@ class Blockonomics {
 	}
 
 	/*
+	 * Try to get order row from db by uuid
+	 */
+	public function getOrderByUuid($uuid) {
+		try {
+			$existing_order = Capsule::table('blockonomics_bitcoin_orders')
+				->where('flyp_id', $uuid)
+				->orderBy('timestamp', 'desc')
+				->first();
+		} catch (\Exception $e) {
+				echo "Unable to select order from blockonomics_bitcoin_orders: {$e->getMessage()}";
+		}
+
+		$row_in_array = array(
+			"id" => $existing_order->id,
+			"order_id" => $existing_order->id_order,
+			"timestamp"=> $existing_order->timestamp,
+			"address" => $existing_order->addr,
+			"status" => $existing_order->status,
+			"value" => $existing_order->value,
+			"bits" => $existing_order->bits,
+			"bits_payed" => $existing_order->bits_payed
+		);
+
+		return $row_in_array;
+	}
+
+	/*
 	 * Try to get order row from db by order id
 	 */
 	public function getOrderById($orderId) {
@@ -276,6 +330,22 @@ class Blockonomics {
 		);
 
 		return $row_in_array;
+	}
+
+	/*
+	 * Try to get order row from db by uuid
+	 */
+	public function updateFlypIdInDb($orderId, $flypId) {
+		try {
+			Capsule::table('blockonomics_bitcoin_orders')
+					->where('id_order', $orderId)
+					->update([
+						'flyp_id' => $flypId
+					]
+				);
+			} catch (\Exception $e) {
+				echo "Unable to update flyp id to blockonomics_bitcoin_orders: {$e->getMessage()}";
+		}
 	}
 
 	public function updateOrderInDb($addr, $txid, $status, $bits_payed) {
@@ -314,15 +384,15 @@ class Blockonomics {
 
 				switch ($responseObj->response_code) {
 
-					case 'HTTP/1.1 200 OK':
+					case '200':
 							break;
 
-					case 'HTTP/1.1 401 Unauthorized': {
+					case '401': {
 							$error_str = 'API Key is incorrect. Make sure that the API key set in admin Blockonomics module configuration is correct.';
 							break;
 					}
 
-					case 'HTTP/1.1 500 Internal Server Error': {
+					case '500': {
 
 						if(isset($responseObj->message)) {
 
