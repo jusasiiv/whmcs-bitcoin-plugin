@@ -274,9 +274,11 @@ function pay_altcoins() {
 			var alt_minimum = response['min'];
 			var alt_maximum = response['max'];
 			if(btcAmount <= alt_minimum){
-				set_alt_status(7)
+				set_alt_status(7);
+				clearInterval(interval_check);
 			}else if(btcAmount >= alt_maximum){
-				set_alt_status(7)        
+				set_alt_status(7);
+				clearInterval(interval_check);        
 			}
 		}
 	};
