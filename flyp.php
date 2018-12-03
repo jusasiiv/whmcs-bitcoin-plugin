@@ -81,8 +81,8 @@ function bnomics_info_order(){
 }
 
 function bnomics_send_email(){
-    global $CONFIG;
-    $actual_link            = $CONFIG['SystemURL'];
+    $blockonomics = new Blockonomics();
+    $actual_link = $blockonomics->getSystemUrl();
     $flypID                 = $_REQUEST['uuid'];
     $flypCoin               = $_REQUEST['coin'];
     $flypSymbol             = $_REQUEST['symbol'];
