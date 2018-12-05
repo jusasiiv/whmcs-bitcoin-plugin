@@ -1,13 +1,13 @@
 <?php
 
 require_once(dirname(__FILE__) . '/modules/gateways/Blockonomics/Blockonomics.php');
-require __DIR__ . '/init.php';
 
 use WHMCS\ClientArea;
 use WHMCS\Database\Capsule;
 use Blockonomics\Blockonomics;
 
 define('CLIENTAREA', true);
+require 'init.php';
 
 // Init Blockonomics class
 $blockonomics = new Blockonomics();
