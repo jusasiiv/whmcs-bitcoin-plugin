@@ -193,97 +193,111 @@ function pay_altcoins() {
 	email = 1;
 	document.getElementById("alt-qrcode").innerHTML = "";
 	var alt_coin = document.getElementById("altcoin_select");
-	var order = new XMLHttpRequest();
-	order.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			var response = JSON.parse(this.responseText);
-			document.getElementById("alt-address").value = response['deposit_address'];
-			// $scope.loading = false;
-			if(alt_coin[alt_coin.selectedIndex].value == 'ETH'){
-			  Array.from(document.getElementsByClassName("alt-explorer")).forEach(
-				function(element, index, array) {
-				    element.href = 'https://etherscan.io/address/' + response['deposit_address'];
-			    }
-			  );
-			  Array.from(document.getElementsByClassName("cf")).forEach(
-				function(element, index, array) {
-				    element.classList.add('cf-eth');
-			  });
-			}else if(alt_coin[alt_coin.selectedIndex].value == 'LTC'){
-			  Array.from(document.getElementsByClassName("alt-explorer")).forEach(
-				function(element, index, array) {
-				    element.href = 'https://chainz.cryptoid.info/ltc/address.dws?' + response['deposit_address'];
-			  });
-			  Array.from(document.getElementsByClassName("cf")).forEach(
-				function(element, index, array) {
-				    element.classList.add('cf-ltc');
-			  });
-			}
-			document.getElementById("alt-amount").innerHTML = response['order']['invoiced_amount'];
-			document.getElementById("alt-symbol").innerHTML = response['order']['from_currency'];
-			var alt_qr_code = alt_coin[alt_coin.selectedIndex].id+":"+ response['deposit_address'] +"?amount="+ response['order']['invoiced_amount'] +"&value="+ response['order']['invoiced_amount'];
-			document.getElementById("alt-qrcode").href = alt_qr_code;
-			Array.from(document.getElementsByClassName("alt-coin")).forEach(
-				function(element, index, array) {
-				    element.innerHTML = alt_coin[alt_coin.selectedIndex].innerHTML;
-			    }
-			);
-			new QRCode(document.getElementById("alt-qrcode"), {
-				text: alt_qr_code,
-				width: 128,
-				height: 128,
-				correctLevel : QRCode.CorrectLevel.M
-			});
-			var uuid = response['order']['uuid'];
-			Array.from(document.getElementsByClassName("alt-uuid")).forEach(
-				function(element, index, array) {
-				    element.innerHTML = uuid;
-			    }
-			);
-			interval_check = setInterval(function(response) {
-			  checkOrder(uuid);
-			}, 10000);
-			var altMinutesLeft = document.getElementById("alt-time-left-minutes");
-			var altTotalProgress = 100;
-			var altTotalTime = 20 * 60; //20m
-			var altCurrentTime = 20 * 60; //20m
-			var altCurrentProgress = 100;
-			var altTimeDiv = document.getElementById("alt-time-left");
-			interval = setInterval( function() { 
-				altCurrentTime = altCurrentTime - 1;
-				altCurrentProgress = Math.floor(altCurrentTime*altTotalProgress/altTotalTime);
-				altTimeDiv.style.width = "" + altCurrentProgress + "%";
+	( function( promises ){
+	    return new Promise( ( resolve, reject ) => {
+	        Promise.all( promises )
+	            .then( values => {
+	            	var alt_limits = JSON.parse(values[0]);
+					var alt_minimum = alt_limits['min'];
+					var alt_maximum = alt_limits['max'];
+					if(btcAmount >= alt_minimum && btcAmount <= alt_maximum){
+	                	var response = JSON.parse(values[1]);
+	                	document.getElementById("alt-address").value = response['deposit_address'];
+						if(alt_coin[alt_coin.selectedIndex].value == 'ETH'){
+						  Array.from(document.getElementsByClassName("alt-explorer")).forEach(
+							function(element, index, array) {
+							    element.href = 'https://etherscan.io/address/' + response['deposit_address'];
+						    }
+						  );
+						  Array.from(document.getElementsByClassName("cf")).forEach(
+							function(element, index, array) {
+							    element.classList.add('cf-eth');
+						  });
+						}else if(alt_coin[alt_coin.selectedIndex].value == 'LTC'){
+						  Array.from(document.getElementsByClassName("alt-explorer")).forEach(
+							function(element, index, array) {
+							    element.href = 'https://chainz.cryptoid.info/ltc/address.dws?' + response['deposit_address'];
+						  });
+						  Array.from(document.getElementsByClassName("cf")).forEach(
+							function(element, index, array) {
+							    element.classList.add('cf-ltc');
+						  });
+						}
+						document.getElementById("alt-amount").innerHTML = response['order']['invoiced_amount'];
+						document.getElementById("alt-symbol").innerHTML = response['order']['from_currency'];
+						var alt_qr_code = alt_coin[alt_coin.selectedIndex].id+":"+ response['deposit_address'] +"?amount="+ response['order']['invoiced_amount'] +"&value="+ response['order']['invoiced_amount'];
+						document.getElementById("alt-qrcode").href = alt_qr_code;
+						Array.from(document.getElementsByClassName("alt-coin")).forEach(
+							function(element, index, array) {
+							    element.innerHTML = alt_coin[alt_coin.selectedIndex].innerHTML;
+						    }
+						);
+						new QRCode(document.getElementById("alt-qrcode"), {
+							text: alt_qr_code,
+							width: 128,
+							height: 128,
+							correctLevel : QRCode.CorrectLevel.M
+						});
+						var uuid = response['order']['uuid'];
+						Array.from(document.getElementsByClassName("alt-uuid")).forEach(
+							function(element, index, array) {
+							    element.innerHTML = uuid;
+						    }
+						);
+						interval_check = setInterval(function(response) {
+						  checkOrder(uuid);
+						}, 10000);
+						var altMinutesLeft = document.getElementById("alt-time-left-minutes");
+						var altTotalProgress = 100;
+						var altTotalTime = 20 * 60; //20m
+						var altCurrentTime = 20 * 60; //20m
+						var altCurrentProgress = 100;
+						var altTimeDiv = document.getElementById("alt-time-left");
+						interval = setInterval( function() { 
+							altCurrentTime = altCurrentTime - 1;
+							altCurrentProgress = Math.floor(altCurrentTime*altTotalProgress/altTotalTime);
+							altTimeDiv.style.width = "" + altCurrentProgress + "%";
 
-				var result = new Date(altCurrentTime * 1000).toISOString().substr(14, 5);
-				altMinutesLeft.innerHTML = result;
+							var result = new Date(altCurrentTime * 1000).toISOString().substr(14, 5);
+							altMinutesLeft.innerHTML = result;
 
-				if (altCurrentTime <= 0) {
-					document.getElementById("alt-time-wrapper").style.display = "none";
-					document.getElementById("alt-time-left-minutes").style.display = "none";
-				}
-			}, 1000);
-		}
-	};
-	order.open("GET", "flyp.php?action=create_order&altcoin="+document.getElementById("altcoin_select").value+"&amount="+btcAmount+"&address="+btcAddress+"&order_id="+orderId, true);
-	order.send();
-
-	var limits = new XMLHttpRequest();
-	limits.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			var response = JSON.parse(this.responseText);
-			var alt_minimum = response['min'];
-			var alt_maximum = response['max'];
-			if(btcAmount <= alt_minimum){
-				set_alt_status(7);
-				clearInterval(interval_check);
-			}else if(btcAmount >= alt_maximum){
-				set_alt_status(7);
-				clearInterval(interval_check);        
-			}
-		}
-	};
-	limits.open("GET", "flyp.php?action=fetch_limit&altcoin="+document.getElementById("altcoin_select").value, true);
-	limits.send();
+							if (altCurrentTime <= 0) {
+								document.getElementById("alt-time-wrapper").style.display = "none";
+								document.getElementById("alt-time-left-minutes").style.display = "none";
+							}
+						}, 1000);
+					}else{
+						set_alt_status(7);
+					}
+	                resolve( values );
+	            })
+	            .catch( err => {
+	                console.dir( err );
+	                throw err;
+	            });
+	    });
+	})([ 
+	    new Promise( ( resolve, reject ) => {
+	    		var limits = new XMLHttpRequest();
+				limits.onreadystatechange = function() {
+					if (this.readyState == 4 && this.status == 200) {
+						resolve( this.responseText );
+					}
+				};
+				limits.open("GET", "flyp.php?action=fetch_limit&altcoin="+document.getElementById("altcoin_select").value, true);
+				limits.send();
+	    }),
+	    new Promise( ( resolve, reject ) => {
+	        	var order = new XMLHttpRequest();
+				order.onreadystatechange = function() {
+					if (this.readyState == 4 && this.status == 200) {
+						resolve( this.responseText );
+					}
+				};
+				order.open("GET", "flyp.php?action=create_order&altcoin="+document.getElementById("altcoin_select").value+"&amount="+btcAmount+"&address="+btcAddress+"&order_id="+orderId, true);
+				order.send();
+	    })
+	 ]);
 }
 
 function altcoin_select() {
