@@ -81,11 +81,12 @@ function bnomics_info_order(){
 }
 
 function bnomics_send_email(){
+    $blockonomics = new Blockonomics();
+    $actual_link = $blockonomics->getSystemUrl();
     $flypID                 = $_REQUEST['uuid'];
     $flypCoin               = $_REQUEST['coin'];
     $flypSymbol             = $_REQUEST['symbol'];
     $whmcs_invoice_id       = $_REQUEST['order_id'];
-    $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
     $subject = $flypCoin . ' Payment Recieved';
 	$command = 'SendEmail';
 	$postData = array(

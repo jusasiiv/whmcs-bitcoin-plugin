@@ -39,7 +39,7 @@ class Blockonomics {
 		try {
 			$callback_secret = sha1(openssl_random_pseudo_bytes(20));
 
-			$callback_secret = $this->getSystemUrl() . 'modules/gateways/callback/blockonomics.php?secret=' . $callback_secret;
+			$callback_secret = $this->getSystemUrl() . '/modules/gateways/callback/blockonomics.php?secret=' . $callback_secret;
 
 			$api_secret = Capsule::table('tblpaymentgateways')
 					->where('gateway', 'blockonomics')
@@ -367,9 +367,11 @@ class Blockonomics {
 	 * Get URL of the WHMCS installation
 	 */
 	public function getSystemUrl() {
-		return Capsule::table('tblconfiguration')
-			->where('setting', 'SystemURL')
-			->value('value');
+		if(strpos($_SERVER[REQUEST_URI], '/modules') !== false) {
+		  	return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]".explode("/modules",$_SERVER[REQUEST_URI])[0];
+		}
+		$url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]".explode(".php",$_SERVER[REQUEST_URI])[0];
+		return substr($url, 0, strrpos( $url, '/'));
 	}
 
 	public function checkForErrors($responseObj) {
@@ -403,7 +405,7 @@ class Blockonomics {
 										$error_str = 'There is a problem in the Callback URL. Make sure that you have set your Callback URL from the admin Blockonomics module configuration to your Merchants > Settings.';
 										break;
 								case "This require you to add an xpub in your wallet watcher":
-										$error_str = 'There is a problem in the XPUB. Make sure that the you have added an address to Wallet Wathcer > Address Wathcer. If you have added an address make sure that it is an XPUB address and not a Bitcoin address.';
+										$error_str = 'There is a problem in the XPUB. Make sure that you have added an address to Wallet Watcher > Address Watcher. If you have added an address make sure that it is an XPUB address and not a Bitcoin address.';
 										break;
 								default:
 										$error_str = $responseObj->message;
