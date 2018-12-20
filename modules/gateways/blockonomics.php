@@ -75,7 +75,7 @@ function blockonomics_link($params) {
 
 	$blockonomics = new Blockonomics();
 	$system_url = $blockonomics->getSystemUrl();
-	$form_url = $system_url . '/payment.php';
+	$form_url = $system_url . 'payment.php';
 
 	$form = '<form action="' . $form_url . '" method="POST">';
 	$form .= '<input type="hidden" name="price" value="'. $params['amount'] .'"/>';

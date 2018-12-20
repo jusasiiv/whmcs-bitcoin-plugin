@@ -59,6 +59,10 @@ if ($uuid) {
 	$ca->output();
 }else{
 	if(!$fiat_amount || !$currency || !$order_id) {
+		echo "<b>Error: Failed to fetch order data.</b> <br> 
+					Note to admin: Please check that your System URL is configured correctly.
+					If you are using SSL, verify that System URL is set to use HTTPS and not HTTP. <br>
+					To configure System URL, please go to WHMCS admin > Setup > General Settings > General";
 		exit;
 	}
 
