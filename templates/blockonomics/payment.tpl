@@ -135,6 +135,7 @@
 <div id="btc-address" data-address="{$btc_address}"></div>
 <div id="btc-amount" data-amount="{$btc_amount}"></div>
 <div id="system-url" data-url="{$system_url}" data-orderid="{$order_id}"></div>
+<div id="time-period" data-timeperiod="{$time_period}"></div>
 
 <div id="paywrapper" class="payment-wrapper center">
 

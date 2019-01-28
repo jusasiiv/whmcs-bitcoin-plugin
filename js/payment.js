@@ -8,9 +8,13 @@ window.onload = function() {
 		infoOrder(flypId);
 	}
 	else{
+
+		var timePeriodDiv = document.getElementById("time-period");
+		timePeriod = timePeriodDiv.dataset.timeperiod;
+
 	  var totalProgress = 100;
-	  var totalTime = 10*60; //10m
-	  var currentTime = 10*60; //10m
+	  var totalTime = timePeriod * 60;
+	  var currentTime = timePeriod * 60;
 	  var currentProgress = 100;
 
 		var systemUrlDiv = document.getElementById("system-url");
