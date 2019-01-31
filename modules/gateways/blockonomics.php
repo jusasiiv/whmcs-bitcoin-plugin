@@ -39,7 +39,7 @@ function blockonomics_config() {
 			});
 
 			/**
-			 * Generate Test Setup button
+			 * Generate Test Setup button and setup result field
 			 */
 			var settingsTable = document.getElementById("Payment-Gateway-Config-blockonomics");
 
@@ -65,7 +65,8 @@ function blockonomics_config() {
 			function reqListener () {
 				responseObj = JSON.parse(this.responseText);
 				if (responseObj.error) {
-					testSetupResultCell.innerHTML = "<label style='color:red;'>Error:</label> " + responseObj.errorStr;
+					testSetupResultCell.innerHTML = "<label style='color:red;'>Error:</label> " + responseObj.errorStr + 
+					"<br>For more information, please consult <a href='https://blockonomics.freshdesk.com/support/solutions/articles/33000215104-troubleshooting-unable-to-generate-new-address' target='_blank'>this troubleshooting article</a>";
 				} else {
 					testSetupResultCell.innerHTML = "<label style='color:green;'>Congrats! Setup is all done</label>";
 				}

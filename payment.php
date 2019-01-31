@@ -88,8 +88,8 @@ if ($uuid) {
 
 		if ($error) {
 
-			$error_str = 'Please use Test Setup button in configuration to diagnose the error.';
-			$ca->assign('error', $error_str);
+			$error = True;
+			$ca->assign('error', $error);
 
 		} else {
 
