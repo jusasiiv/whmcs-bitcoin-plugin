@@ -8,6 +8,10 @@ function blockonomics_config() {
 
 	// When loading plugin setup page, run custom JS
 	add_hook('AdminAreaFooterOutput', 1, function($vars) {
+
+		$blockonomics = new Blockonomics();
+		$system_url = $blockonomics->getSystemUrl();
+
 		return <<<HTML
 		<script type="text/javascript">
 			/**
@@ -71,13 +75,13 @@ function blockonomics_config() {
 					testSetupResultCell.innerHTML = "<label style='color:green;'>Congrats! Setup is all done</label>";
 				}
 				newBtn.disabled = false;
-			  console.log(responseObj);
 			}
 
 			newBtn.onclick = function() {
+				var testSetupUrl = "$system_url" + "testSetup.php";
 				var oReq = new XMLHttpRequest();
 				oReq.addEventListener("load", reqListener);
-				oReq.open("GET", "/whmcs/testSetup.php");
+				oReq.open("GET", testSetupUrl);
 				oReq.send();
 
 				newBtn.disabled = true;
