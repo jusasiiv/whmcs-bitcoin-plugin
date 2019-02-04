@@ -28,13 +28,13 @@ $uuid = $_REQUEST['uuid'];
 $fiat_amount = $_POST['price'];
 $currency = $_POST['currency'];
 $order_id = $_POST['order_id'];
+
 $system_url = $blockonomics->getSystemUrl();
+$ca->assign('system_url', $system_url);
 
 if ($uuid) {
 	$existing_order = $blockonomics->getOrderByUuid($uuid);
 	$ca->assign('altcoins', 1);
-
-	$ca->assign('system_url', $system_url);
 	$ca->assign('flyp_id', $uuid);
 	// No order exists, exit
 	if(is_null($existing_order['order_id'])) {
@@ -73,20 +73,23 @@ if ($uuid) {
 	$ca->assign('fiat_amount', $fiat_amount);
 	$ca->assign('currency', $currency);
 	$ca->assign('order_id', $order_id);
-	$ca->assign('system_url', $system_url);
+
+	$time_period_from_db = $blockonomics->getTimePeriod();
+	$time_period = isset($time_period_from_db) ? $time_period_from_db : '10';
+	$ca->assign('time_period', $time_period);
 
 	$existing_order = $blockonomics->getOrderById($order_id);
-
 
 	// No order exists, create new and add to db
 	if(is_null($existing_order['order_id'])) {
 
 		$response_obj = $blockonomics->getNewBitcoinAddress();
-		$error_str = $blockonomics->checkForErrors($response_obj);
+		$error = $blockonomics->checkForErrors($response_obj);
 
-		if ($error_str) {
+		if ($error) {
 
-			$ca->assign('error', $error_str);
+			$error = True;
+			$ca->assign('error', $error);
 
 		} else {
 
@@ -104,22 +107,12 @@ if ($uuid) {
 			 * ADD ORDER TO DB
 			 */
 			$blockonomics->insertOrderToDb($order_id, $btc_address, $fiat_amount, $btc_amount);
-
-			/*
-			 * UPDATE ORDER STATUS
-			 */
-			/* REMOVED STATUS CHANGE
-			$true_order_id = $blockonomics->getOrderIdByInvoiceId($order_id);
-			$order_status = 'Waiting for Bitcoin Confirmation';
-			$blockonomics->updateOrderStatus($true_order_id, $order_status);
-			*/
-
 		}
 	} else {
 		$btc_address = $existing_order['address'];
 		$ca->assign('btc_address', $btc_address);
 
-		$btc_amount = $existing_order['bits'];
+		$btc_amount = $blockonomics->getBitcoinAmount($fiat_amount, $currency);
 		$ca->assign('btc_amount', $btc_amount / 1.0e8);
 	}
 

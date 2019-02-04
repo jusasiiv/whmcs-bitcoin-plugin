@@ -6,21 +6,34 @@ use Blockonomics\Blockonomics;
 
 function blockonomics_config() {
 
-	// When loading payment gateway setup page, disable editing of callback url field
+	// When loading plugin setup page, run custom JS
 	add_hook('AdminAreaFooterOutput', 1, function($vars) {
+
+		$blockonomics = new Blockonomics();
+		$system_url = $blockonomics->getSystemUrl();
+
 		return <<<HTML
 		<script type="text/javascript">
+			/**
+			 * Disable callback url editing
+			 */
 			var inputFields = document.getElementsByName('field[ApiSecret]');
 			inputFields.forEach(function(element) {
 				element.readOnly = true;
 			});
 
+			/**
+			 * Padding for config labels
+			 */
 			var inputLabels = document.getElementsByClassName('fieldlabel');
 
 			for(var i = 0; i < inputLabels.length; i++) {
 				inputLabels[i].style.paddingRight = '20px';
 			}
 
+			/**
+			 * Set available values for margin setting
+			 */
 			var inputMargin = document.getElementsByName('field[Margin]');
 			inputMargin.forEach(function(element) {
 				element.type = 'number';
@@ -28,6 +41,56 @@ function blockonomics_config() {
 				element.max = 4;
 				element.step = 0.01;
 			});
+
+			/**
+			 * Generate Test Setup button and setup result field
+			 */
+			var settingsTable = document.getElementById("Payment-Gateway-Config-blockonomics");
+
+			var testSetupBtnRow = settingsTable.insertRow(settingsTable.rows.length - 1);
+			var testSetupLabelCell = testSetupBtnRow.insertCell(0);
+			var testSetupBtnCell = testSetupBtnRow.insertCell(1);
+			testSetupBtnCell.className = "fieldarea";
+
+			var testSetupResultRow = settingsTable.insertRow(settingsTable.rows.length - 1);
+			testSetupResultRow.style.display = "none";
+			var testSetupResultLabel = testSetupResultRow.insertCell(0);
+			var testSetupResultCell = testSetupResultRow.insertCell(1);
+			testSetupResultCell.className = "fieldarea";
+
+			var newBtn = document.createElement('BUTTON');
+			newBtn.className = "btn btn-primary";
+
+			var t = document.createTextNode("Test Setup");
+			newBtn.appendChild(t);
+
+			testSetupBtnCell.appendChild(newBtn);
+
+			function reqListener () {
+				responseObj = JSON.parse(this.responseText);
+				if (responseObj.error) {
+					testSetupResultCell.innerHTML = "<label style='color:red;'>Error:</label> " + responseObj.errorStr + 
+					"<br>For more information, please consult <a href='https://blockonomics.freshdesk.com/support/solutions/articles/33000215104-troubleshooting-unable-to-generate-new-address' target='_blank'>this troubleshooting article</a>";
+				} else {
+					testSetupResultCell.innerHTML = "<label style='color:green;'>Congrats! Setup is all done</label>";
+				}
+				newBtn.disabled = false;
+			}
+
+			newBtn.onclick = function() {
+				var testSetupUrl = "$system_url" + "testSetup.php";
+				var oReq = new XMLHttpRequest();
+				oReq.addEventListener("load", reqListener);
+				oReq.open("GET", testSetupUrl);
+				oReq.send();
+
+				newBtn.disabled = true;
+				testSetupResultRow.style.display = "table-row";
+				testSetupResultCell.innerHTML = "Testing setup...";
+
+				return false;
+			}
+
 		</script>
 HTML;
 
@@ -52,6 +115,18 @@ HTML;
 			'Description'  => 'CALLBACK URL (Copy this url and set in <a target="_blank" href="https://www.blockonomics.co/merchants#/page6">Merchants</a>)',
 			'Type'         => 'text'
 		),
+    'TimePeriod' => array(
+        'FriendlyName' => 'Time Period',
+        'Type' => 'dropdown',
+        'Options' => array(
+            '10' => '10',
+            '15' => '15',
+            '20' => '20',
+            '25' => '25',
+            '30' => '30',
+        ),
+        'Description' => 'Time period of countdown timer on payment page (in minutes)',
+    ),
 		'Altcoins' => array(
 				'FriendlyName' => 'Altcoins enabled',
 				'Type' => 'yesno',

@@ -74,6 +74,16 @@ class Blockonomics {
 	}
 
 	/*
+	 * Get user configured API key from database
+	 */
+	public function getTimePeriod() {
+		return Capsule::table('tblpaymentgateways')
+			->where('gateway', 'blockonomics')
+			->where('setting', 'TimePeriod')
+			->value('value');
+	}
+
+	/*
 	 * Update order status to 'Waiting for Bitcoin Confirmation'
 	 */
 	public function updateOrderStatus($orderId, $status) {
@@ -122,10 +132,17 @@ class Blockonomics {
 	/*
 	 * Get new address from Blockonomics Api
 	 */
-	public function getNewBitcoinAddress() {
+	public function getNewBitcoinAddress($reset=false) {
 
 		$api_key = $this->getApiKey();
 		$secret = $this->getCallbackSecret();
+
+		if($reset) {
+				$get_params = "?match_callback=$secret&reset=1";
+		} 
+		else {
+				$get_params = "?match_callback=$secret";
+		}
 
 		// Secret is formatted http://url.com?secret=abc123,
 		// Get last 40 chars of the secret string
@@ -133,7 +150,7 @@ class Blockonomics {
 
 		$ch = curl_init();
 
-		curl_setopt($ch, CURLOPT_URL, "https://www.blockonomics.co/api/new_address?match_callback=".$secret);
+		curl_setopt($ch, CURLOPT_URL, "https://www.blockonomics.co/api/new_address" . $get_params);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 
@@ -144,7 +161,7 @@ class Blockonomics {
 
 		$contents = curl_exec($ch);
 		if (curl_errno($ch)) {
-		    echo 'Error:' . curl_error($ch);
+				echo 'Error:' . curl_error($ch);
 		}
 
 		$responseObj = json_decode($contents);
@@ -175,7 +192,7 @@ class Blockonomics {
 
 			$contents = curl_exec($ch);
 			if (curl_errno($ch)) {
-			    echo 'Error:' . curl_error($ch);
+					echo 'Error:' . curl_error($ch);
 			}
 			curl_close ($ch);
 			$price = json_decode($contents)->price;
@@ -216,7 +233,7 @@ class Blockonomics {
 			}
 		}else if(!Capsule::schema()->hasColumn('blockonomics_bitcoin_orders', 'flyp_id')){
 			 Capsule::schema()->table('blockonomics_bitcoin_orders', function($table){
-			 	$table->text('flyp_id');
+				$table->text('flyp_id');
 			 });
 		}
 	}
@@ -373,60 +390,111 @@ class Blockonomics {
 	}
 
 	public function checkForErrors($responseObj) {
-
 		if(!isset($responseObj->response_code)) {
-				$error_str = 'Your webhost is blocking outgoing HTTPS connections. Blockonomics requires an outgoing HTTPS POST (port 443) to generate new address. Check with your webhosting provider to allow this.';
-
-		} elseif(!ini_get('allow_url_fopen')) {
-				$error_str = 'The allow_url_fopen is not enabled, please enable this option to allow address generation.';
-
+				$error = true;
 		} else {
-
 				switch ($responseObj->response_code) {
-
 					case '200':
 							break;
-
-					case '401': {
-							$error_str = 'API Key is incorrect. Make sure that the API key set in admin Blockonomics module configuration is correct.';
-							break;
-					}
-
-					case '500': {
-
-						if(isset($responseObj->message)) {
-
-							$error_code = $responseObj->message;
-
-							switch ($error_code) {
-								case "Could not find matching xpub":
-										$error_str = 'There is a problem in the Callback URL. Make sure that you have set your Callback URL from the admin Blockonomics module configuration to your Merchants > Settings.';
-										break;
-								case "This require you to add an xpub in your wallet watcher":
-										$error_str = 'There is a problem in the XPUB. Make sure that you have added an address to Wallet Watcher > Address Watcher. If you have added an address make sure that it is an XPUB address and not a Bitcoin address.';
-										break;
-								default:
-										$error_str = $responseObj->message;
-							}
-							break;
-						} else {
-								$error_str = $responseObj->response_code;
-								break;
-						}
-					}
-
 					default:
-							$error_str = $responseObj->response_code;
+							$error = true;
 							break;
 				}
 		}
-
-		if(isset($error_str)) {
-			return $error_str;
+		if(isset($error)) {
+			return $error;
 		}
-
 		// No errors
 		return false;
 	}
 
+ public function doCurlCall($url, $post_content='') {
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		if ($post_content)
+		{
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $post_content);
+		}
+		curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+				'Authorization: Bearer '. $this->getApiKey(),
+				'Content-type: application/x-www-form-urlencoded'
+			));
+		$data = curl_exec($ch);
+		$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		curl_close($ch);
+
+		$responseObj = new \stdClass();
+		$responseObj->data = json_decode($data);
+		$responseObj->response_code = $httpcode;
+		return $responseObj;
+	}
+
+
+	public function testSetup()	{
+
+		$xpub_fetch_url = 'https://www.blockonomics.co/api/address?&no_balance=true&only_xpub=true&get_callback=true';
+		$set_callback_url = 'https://www.blockonomics.co/api/update_callback';
+		$error_str = '';
+
+		$response = $this->doCurlCall($xpub_fetch_url);
+
+		$callback_url = $this->getCallbackSecret();
+
+		if (!isset($response->response_code)) {
+			$error_str = 'Your server is blocking outgoing HTTPS calls';
+		}
+		elseif ($response->response_code==401)
+			$error_str = 'API Key is incorrect';
+		elseif ($response->response_code!=200)
+			$error_str = $response->data;
+		elseif (!isset($response->data) || count($response->data) == 0)
+		{
+			$error_str = 'You have not entered an xpub';
+		}
+		elseif (count($response->data) == 1)
+		{
+			if(!$response->data[0]->callback || $response->data[0]->callback == null)
+			{
+				//No callback URL set, set one 
+				$post_content = '{"callback": "'.$callback_url.'", "xpub": "'.$response->data[0]->address.'"}';
+				$this->doCurlCall($set_callback_url, $post_content);  
+			}
+			elseif($response->data[0]->callback != $callback_url)
+			{
+				// Check if only secret differs
+				$base_url = substr($callback_url, 0, -48);
+				if(strpos($response->data[0]->callback, $base_url) !== false)
+				{
+					//Looks like the user regenrated callback by mistake
+					//Just force Update_callback on server
+					$post_content = '{"callback": "'.$callback_url.'", "xpub": "'.$response->data[0]->address.'"}';
+					$this->doCurlCall($set_callback_url, $post_content);  
+				}
+				else
+					$error_str = "Your have an existing callback URL. Refer instructions on integrating multiple websites";
+			}
+		}
+		else 
+		{
+			$error_str = "Your have an existing callback URL or multiple xPubs. Refer instructions on integrating multiple websites";
+
+			foreach ($response->data as $resObj)
+				if($resObj->callback == $callback_url)
+					// Matching callback URL found, set error back to empty
+					$error_str = '';
+		}
+
+		if ($error_str == '') {
+			// Test new address generation
+			$new_addresss_response = $this->getNewBitcoinAddress(true);
+			if ($new_addresss_response->status != 200){
+				$error_str = $new_addresss_response->message;
+			}
+		}
+
+		return $error_str;
+	}
 }

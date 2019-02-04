@@ -135,6 +135,7 @@
 <div id="btc-address" data-address="{$btc_address}"></div>
 <div id="btc-amount" data-amount="{$btc_amount}"></div>
 <div id="system-url" data-url="{$system_url}" data-orderid="{$order_id}"></div>
+<div id="time-period" data-timeperiod="{$time_period}"></div>
 
 <div id="paywrapper" class="payment-wrapper center">
 
@@ -364,8 +365,7 @@
 
 <div id="address-error">
     <h3>Could not generate new bitcoin address.</h3>
-    <i>Note to webmaster: {$error} </i>
-    <i>If issue persists, log a ticket on <a href="https://blockonomics.freshdesk.com/support/solutions/articles/33000215104-troubleshooting-unable-to-generate-new-address" target="_blank">http://blockonomics.freshdesk.com/</a></i>
+    <i>Note to webmaster: Please login to admin and go to Setup > Payments > Payment Gateways > Manage Existing Gateways and use the Test Setup button to diagnose the error. </i>
 </div>
 
 {/if}
