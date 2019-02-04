@@ -132,10 +132,17 @@ class Blockonomics {
 	/*
 	 * Get new address from Blockonomics Api
 	 */
-	public function getNewBitcoinAddress() {
+	public function getNewBitcoinAddress($reset=false) {
 
 		$api_key = $this->getApiKey();
 		$secret = $this->getCallbackSecret();
+
+		if($reset) {
+				$get_params = "?match_callback=$secret&reset=1";
+		} 
+		else {
+				$get_params = "?match_callback=$secret";
+		}
 
 		// Secret is formatted http://url.com?secret=abc123,
 		// Get last 40 chars of the secret string
@@ -143,7 +150,7 @@ class Blockonomics {
 
 		$ch = curl_init();
 
-		curl_setopt($ch, CURLOPT_URL, "https://www.blockonomics.co/api/new_address?match_callback=".$secret);
+		curl_setopt($ch, CURLOPT_URL, "https://www.blockonomics.co/api/new_address" . $get_params);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 
@@ -430,10 +437,9 @@ class Blockonomics {
 
 		$xpub_fetch_url = 'https://www.blockonomics.co/api/address?&no_balance=true&only_xpub=true&get_callback=true';
 		$set_callback_url = 'https://www.blockonomics.co/api/update_callback';
+		$error_str = '';
 
 		$response = $this->doCurlCall($xpub_fetch_url);
-
-		$error_str = '';
 
 		$callback_url = $this->getCallbackSecret();
 
@@ -473,12 +479,22 @@ class Blockonomics {
 		}
 		else 
 		{
-			// Check if callback url is set
+			$error_str = "Your have an existing callback URL or multiple xPubs. Refer instructions on integrating multiple websites";
+
 			foreach ($response->data as $resObj)
 				if($resObj->callback == $callback_url)
-					return null;
-			$error_str = "Your have an existing callback URL. Refer instructions on integrating multiple websites";
+					// Matching callback URL found, set error back to empty
+					$error_str = '';
 		}
+
+		if ($error_str == '') {
+			// Test new address generation
+			$new_addresss_response = $this->getNewBitcoinAddress(true);
+			if ($new_addresss_response->status != 200){
+				$error_str = $new_addresss_response->message;
+			}
+		}
+
 		return $error_str;
 	}
 }
