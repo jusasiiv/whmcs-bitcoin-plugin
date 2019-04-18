@@ -78,9 +78,13 @@ $paid = $value / 1.0e8;
 $orderNote = "";
 
 if($value < $bits) {
-	$orderNote .= "Warning: Invoice cancelled as Paid Amount was less than expected\r";
-	$blockonomics->updateInvoiceStatus($invoiceId, "Cancelled");
-	$blockonomics->updateOrderStatus($true_order_id, 'Cancelled');
+	//Check underpayment slack
+	$underpayment_slack = $blockonomics->getUnderpaymentSlack()/100 * $bits;
+	if ($value < $bits - $underpayment_slack) {
+		$orderNote .= "Warning: Invoice cancelled as Paid Amount was less than expected\r";
+		$blockonomics->updateInvoiceStatus($invoiceId, "Cancelled");
+		$blockonomics->updateOrderStatus($true_order_id, 'Cancelled');
+	}
 }
 
 $orderNote .= "Bitcoin transaction id: $txid\r" .

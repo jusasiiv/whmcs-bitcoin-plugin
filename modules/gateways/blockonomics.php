@@ -41,6 +41,13 @@ function blockonomics_config() {
 				element.max = 4;
 				element.step = 0.01;
 			});
+			var inputSlack = document.getElementsByName('field[Slack]');
+			inputSlack.forEach(function(element) {
+				element.type = 'number';
+				element.min = 0;
+				element.max = 10;
+				element.step = 0.01;
+			});
 
 			/**
 			 * Generate Test Setup button and setup result field
@@ -148,6 +155,13 @@ HTML;
 				'Size' => '5',
 				'Default' => 0,
 				'Description' => 'Increase live fiat to BTC rate by small percent',
+		),
+		'Slack' => array(
+				'FriendlyName' => 'Underpayment Slack %',
+				'Type' => 'text',
+				'Size' => '5',
+				'Default' => 0,
+				'Description' => 'Allow payments that are off by a small percentage',
 		),
 	);
 }
