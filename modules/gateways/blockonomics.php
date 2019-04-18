@@ -91,6 +91,16 @@ function blockonomics_config() {
 				return false;
 			}
 
+			/**
+			 * Prompt to save changes after setting a new API key 
+			 */
+			var apiKeyField = document.getElementsByName('field[ApiKey]')[0];
+			apiKeyField.onchange = function() {
+				newBtn.disabled = true;
+				testSetupResultRow.style.display = "table-row";
+				testSetupResultCell.innerHTML = "<label style='color:#337ab7;'>New API Key: Save your changes and then click 'Test Setup'</label>";
+			}
+
 		</script>
 HTML;
 
