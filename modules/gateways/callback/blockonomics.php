@@ -44,7 +44,6 @@ if ($secret_value != $secret) {
 
 $order = $blockonomics->getOrderByAddress($addr);
 $invoiceId = $order['order_id'];
-$transactionId = $order['id'];
 $bits = $order['bits'];
 
 if($status == 0) {
@@ -78,9 +77,15 @@ $paid = $value / 1.0e8;
 $orderNote = "";
 
 if($value < $bits) {
-	$orderNote .= "Warning: Invoice cancelled as Paid Amount was less than expected\r";
-	$blockonomics->updateInvoiceStatus($invoiceId, "Cancelled");
-	$blockonomics->updateOrderStatus($true_order_id, 'Cancelled');
+	$invoiceNote .= "Warning: Paid Amount was less than the expected amount. Invoice will not be marked paid before the whole amount is added.\r";
+	$blockonomics->updateInvoiceNote($invoiceId, $invoiceNote);
+	$price_by_expected = $blockonomics->getPriceByExpected($invoiceId);
+	$paymentAmount = round($paid*$price_by_expected, 2);
+} else {
+	$invoiceNote = "Bitcoin transaction id:\r" .
+		"<a target=\"_blank\" href=\"https://www.blockonomics.co/api/tx?txid=$txid&addr=$addr\">$txid</a>";
+	$blockonomics->updateInvoiceNote($invoiceId, $invoiceNote);
+	$paymentAmount = '';
 }
 
 $orderNote .= "Bitcoin transaction id: $txid\r" .
@@ -90,14 +95,7 @@ $orderNote .= "Bitcoin transaction id: $txid\r" .
 	"https://www.blockonomics.co/api/tx?txid=$txid&addr=$addr";
 
 $blockonomics->updateOrderNote($true_order_id, $orderNote);
-
-$invoiceNote = "Bitcoin transaction id:\r" .
-	"<a target=\"_blank\" href=\"https://www.blockonomics.co/api/tx?txid=$txid&addr=$addr\">$txid</a>";
-
-$blockonomics->updateInvoiceNote($invoiceId, $invoiceNote);
 $blockonomics->updateOrderInDb($addr, $txid, $status, $value);
-
-$transaction_unique_id = 'blockonomics_' . $transactionId;
 
 /**
  * Validate Callback Invoice ID.
@@ -112,7 +110,6 @@ $transaction_unique_id = 'blockonomics_' . $transactionId;
  * @param int $invoiceId Invoice ID
  * @param string $gatewayName Gateway Name
  */
-
 $invoiceId = checkCbInvoiceID($invoiceId, $gatewayParams['name']);
 
 /**
@@ -126,7 +123,13 @@ $invoiceId = checkCbInvoiceID($invoiceId, $gatewayParams['name']);
  * @param string $transactionId Unique Transaction ID
  */
 
-checkCbTransID($transaction_unique_id);
+// If this is test transaction, generate new transaction ID
+if($txid == 'WarningThisIsAGeneratedTestPaymentAndNotARealBitcoinTransaction') {
+	$txid = 'WarningThisIsATestTransaction_' . md5(uniqid(rand(), true));
+}
+
+checkCbTransID($txid);
+
 /**
  * Log Transaction.
  *
@@ -141,7 +144,6 @@ checkCbTransID($transaction_unique_id);
  */
 logTransaction($gatewayParams['name'], $_GET, "Successful");
 
-$paymentAmount = '';
 $paymentFee = 0;
 
 /**
@@ -157,7 +159,7 @@ $paymentFee = 0;
  */
 addInvoicePayment(
 	$invoiceId,
-	$transaction_unique_id,
+	$txid,
 	$paymentAmount,
 	$paymentFee,
 	$gatewayModuleName

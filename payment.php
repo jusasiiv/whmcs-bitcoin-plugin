@@ -32,6 +32,20 @@ $order_id = $_POST['order_id'];
 $system_url = $blockonomics->getSystemUrl();
 $ca->assign('system_url', $system_url);
 
+function generate_address($blockonomics, $ca) {
+	$response_obj = $blockonomics->getNewBitcoinAddress();
+	$error = $blockonomics->checkForErrors($response_obj);
+	if ($error) {
+		$error = True;
+		$ca->assign('error', $error);
+		return null;
+	} else {
+		$btc_address = $response_obj->address;
+		$ca->assign('btc_address', $btc_address);
+		return $btc_address;
+	}
+}
+
 if ($uuid) {
 	$existing_order = $blockonomics->getOrderByUuid($uuid);
 	$ca->assign('altcoins', 1);
@@ -83,18 +97,7 @@ if ($uuid) {
 	// No order exists, create new and add to db
 	if(is_null($existing_order['order_id'])) {
 
-		$response_obj = $blockonomics->getNewBitcoinAddress();
-		$error = $blockonomics->checkForErrors($response_obj);
-
-		if ($error) {
-
-			$error = True;
-			$ca->assign('error', $error);
-
-		} else {
-
-			$btc_address = $response_obj->address;
-			$ca->assign('btc_address', $btc_address);
+			$btc_address = generate_address($blockonomics, $ca);
 
 			/*
 			 * PRICE GENERATION
@@ -107,13 +110,21 @@ if ($uuid) {
 			 * ADD ORDER TO DB
 			 */
 			$blockonomics->insertOrderToDb($order_id, $btc_address, $fiat_amount, $btc_amount);
-		}
+		
 	} else {
-		$btc_address = $existing_order['address'];
-		$ca->assign('btc_address', $btc_address);
 
+		// If this is an additional payment to an underpaid order, generate new address
+		if($existing_order['bits_payed'] > 0) {
+			$btc_address = generate_address($blockonomics, $ca);
+			$blockonomics->updateOrderAddress($order_id, $btc_address);
+		} else {
+			$btc_address = $existing_order['address'];
+		}
+		$ca->assign('btc_address', $btc_address);
+		
 		$btc_amount = $blockonomics->getBitcoinAmount($fiat_amount, $currency);
 		$ca->assign('btc_amount', $btc_amount / 1.0e8);
+		$blockonomics->updateOrderExpected($order_id, $btc_amount, $fiat_amount);
 	}
 
 	# Define the template filename to be used without the .tpl extension
