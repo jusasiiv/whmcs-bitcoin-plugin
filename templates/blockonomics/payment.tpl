@@ -129,7 +129,7 @@
 	<!-- Low/High -->
 	<div id="alt_status_7" class="row"></div>
 </div>
-{else if not $error}
+{else if not $error and not $pending }
 
 <div id="btc-href" data-href="bitcoin:{$btc_address}?amount={$btc_amount}"></div>
 <div id="btc-address" data-address="{$btc_address}"></div>
@@ -361,11 +361,23 @@
 
 <div class="clear"></div>
 
-{else}
+{/if}
+
+{if $error}
 
 <div id="address-error">
     <h3>Could not generate new bitcoin address.</h3>
     <i>Note to webmaster: Please login to admin and go to Setup > Payments > Payment Gateways > Manage Existing Gateways and use the Test Setup button to diagnose the error. </i>
+</div>
+
+{/if}
+
+{if $pending}
+
+<div id="address-error">
+    <h3>Payment is pending</h3>
+    <i>Additional payments to invoice are only allowed after current pending transaction is confirmed. Monitor the transaction here: 
+      <a href="https://www.blockonomics.co/api/tx?txid={$txid}" target="_blank">{$txid}</a></i>
 </div>
 
 {/if}

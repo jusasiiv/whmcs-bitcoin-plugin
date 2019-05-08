@@ -358,7 +358,8 @@ class Blockonomics {
 			"order_id" => $existing_order->id_order,
 			"address"=> $existing_order->addr,
 			"bits" => $existing_order->bits,
-			"bits_payed" => $existing_order->bits_payed
+			"status" => $existing_order->status,
+			"txid" => $existing_order->txid
 		);
 
 		return $row_in_array;
@@ -380,6 +381,9 @@ class Blockonomics {
 		}
 	}
 
+	/*
+	 * Update existing order information. Use BTC payment address as key
+	 */
 	public function updateOrderInDb($addr, $txid, $status, $bits_payed) {
 		try {
 			Capsule::table('blockonomics_bitcoin_orders')
@@ -395,6 +399,9 @@ class Blockonomics {
 		}
 	}
 
+	/*
+	 * Update existing order's expected amount and FIAT amount. Use WHMCS invoice id as key
+	 */
 	public function updateOrderExpected($id_order, $expected, $fiat_amount) {
 		try {
 			Capsule::table('blockonomics_bitcoin_orders')
@@ -409,6 +416,9 @@ class Blockonomics {
 		}
 	}
 
+	/*
+	 * Update existing order's address. Set status, txid and bits_payed to default values. Use WHMCS invoice id as key
+	 */
 	public function updateOrderAddress($id_order, $address) {
 		try {
 			Capsule::table('blockonomics_bitcoin_orders')
