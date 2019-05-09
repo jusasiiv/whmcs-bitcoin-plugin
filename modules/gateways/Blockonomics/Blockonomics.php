@@ -129,6 +129,20 @@ class Blockonomics {
 	}
 
 	/*
+	 * Get the BTC price that was calculated when the order price was last updated
+	 */
+	public function getPriceByExpected($invoiceId) {
+		$query = Capsule::table('blockonomics_bitcoin_orders')
+			->where('id_order', $invoiceId)
+			->select('value');
+		$prices = $query->addSelect('bits')->get();
+		$fiat = $prices[0]->value;
+		$btc = $prices[0]->bits / 1.0e8;
+		$btc_price = $fiat / $btc;
+		return round($btc_price, 2);
+	}
+
+	/*
 	 * Get underpayment slack
 	 */
 	public function getUnderpaymentSlack() {
@@ -352,7 +366,9 @@ class Blockonomics {
 			"id" => $existing_order->id,
 			"order_id" => $existing_order->id_order,
 			"address"=> $existing_order->addr,
-			"bits" => $existing_order->bits
+			"bits" => $existing_order->bits,
+			"status" => $existing_order->status,
+			"txid" => $existing_order->txid
 		);
 
 		return $row_in_array;
@@ -374,6 +390,9 @@ class Blockonomics {
 		}
 	}
 
+	/*
+	 * Update existing order information. Use BTC payment address as key
+	 */
 	public function updateOrderInDb($addr, $txid, $status, $bits_payed) {
 		try {
 			Capsule::table('blockonomics_bitcoin_orders')
@@ -382,6 +401,42 @@ class Blockonomics {
 						'txid' => $txid,
 						'status' => $status,
 						'bits_payed' => $bits_payed
+					]
+				);
+			} catch (\Exception $e) {
+				echo "Unable to update order to blockonomics_bitcoin_orders: {$e->getMessage()}";
+		}
+	}
+
+	/*
+	 * Update existing order's expected amount and FIAT amount. Use WHMCS invoice id as key
+	 */
+	public function updateOrderExpected($id_order, $expected, $fiat_amount) {
+		try {
+			Capsule::table('blockonomics_bitcoin_orders')
+					->where('id_order', $id_order)
+					->update([
+						'bits' => $expected,
+						'value' => $fiat_amount
+					]
+				);
+			} catch (\Exception $e) {
+				echo "Unable to update order to blockonomics_bitcoin_orders: {$e->getMessage()}";
+		}
+	}
+
+	/*
+	 * Update existing order's address. Set status, txid and bits_payed to default values. Use WHMCS invoice id as key
+	 */
+	public function updateOrderAddress($id_order, $address) {
+		try {
+			Capsule::table('blockonomics_bitcoin_orders')
+					->where('id_order', $id_order)
+					->update([
+						'addr' => $address,
+						'status' => -1,
+						'txid' => null,
+						'bits_payed' => null
 					]
 				);
 			} catch (\Exception $e) {
