@@ -142,6 +142,15 @@ class Blockonomics {
 		return round($btc_price, 2);
 	}
 
+	/*
+	 * Get underpayment slack
+	 */
+	public function getUnderpaymentSlack() {
+		return Capsule::table('tblpaymentgateways')
+			->where('gateway', 'blockonomics')
+			->where('setting', 'Slack')
+			->value('value');
+	}
 
 	/*
 	 * Get new address from Blockonomics Api
