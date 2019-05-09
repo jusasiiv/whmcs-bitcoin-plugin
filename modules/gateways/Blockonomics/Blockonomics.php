@@ -128,6 +128,15 @@ class Blockonomics {
 			->value('id');
 	}
 
+	/*
+	 * Get underpayment slack
+	 */
+	public function getUnderpaymentSlack() {
+		return Capsule::table('tblpaymentgateways')
+			->where('gateway', 'blockonomics')
+			->where('setting', 'Slack')
+			->value('value');
+	}
 
 	/*
 	 * Get new address from Blockonomics Api
