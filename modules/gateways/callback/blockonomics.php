@@ -77,16 +77,15 @@ $paid = $value / 1.0e8;
 $orderNote = "";
 
 if($value < $bits) {
-	$invoiceNote .= "Warning: Paid Amount was less than the expected amount. Invoice will not be marked paid before the whole amount is added.\r";
-	$blockonomics->updateInvoiceNote($invoiceId, $invoiceNote);
 	$price_by_expected = $blockonomics->getPriceByExpected($invoiceId);
 	$paymentAmount = round($paid*$price_by_expected, 2);
 } else {
-	$invoiceNote = "Bitcoin transaction id:\r" .
-		"<a target=\"_blank\" href=\"https://www.blockonomics.co/api/tx?txid=$txid&addr=$addr\">$txid</a>";
-	$blockonomics->updateInvoiceNote($invoiceId, $invoiceNote);
 	$paymentAmount = '';
 }
+
+$invoiceNote = "Bitcoin transaction id:\r" .
+	"<a target=\"_blank\" href=\"https://www.blockonomics.co/api/tx?txid=$txid&addr=$addr\">$txid</a>";
+$blockonomics->updateInvoiceNote($invoiceId, $invoiceNote);
 
 $orderNote .= "Bitcoin transaction id: $txid\r" .
 	"Expected amount: $expected BTC\r" .
