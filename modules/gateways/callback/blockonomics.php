@@ -47,20 +47,12 @@ $invoiceId = $order['order_id'];
 $bits = $order['bits'];
 
 if($status == 0) {
-
-	$orderNote = "Waiting for Confirmation on Bitcoin network \r" .
-		"Bitcoin transaction id: $txid \r" .
-		"You can view the transaction at:\r" .
-		"https://www.blockonomics.co/api/tx?txid=$txid&addr=$addr";
-
-
 	$invoiceNote = "<b>Waiting for Confirmation on Bitcoin network</b>\r\r" .
 		"Bitcoin transaction id:\r" .
 		"<a target=\"_blank\" href=\"https://www.blockonomics.co/api/tx?txid=$txid&addr=$addr\">$txid</a>";
 
 	$blockonomics->updateOrderInDb($addr, $txid, $status, $value);
 	$true_order_id = $blockonomics->getOrderIdByInvoiceId($invoiceId);
-	$blockonomics->updateOrderNote($true_order_id, $orderNote);
 	$blockonomics->updateInvoiceNote($invoiceId, $invoiceNote);
 
 	die();
@@ -74,7 +66,6 @@ $true_order_id = $blockonomics->getOrderIdByInvoiceId($invoiceId);
 
 $expected = $bits / 1.0e8;
 $paid = $value / 1.0e8;
-$orderNote = "";
 
 $underpayment_slack = $blockonomics->getUnderpaymentSlack()/100 * $bits;
 if($value < $bits - $underpayment_slack) {
@@ -84,17 +75,7 @@ if($value < $bits - $underpayment_slack) {
 	$paymentAmount = '';
 }
 
-$invoiceNote = "Bitcoin transaction id:\r" .
-	"<a target=\"_blank\" href=\"https://www.blockonomics.co/api/tx?txid=$txid&addr=$addr\">$txid</a>";
-$blockonomics->updateInvoiceNote($invoiceId, $invoiceNote);
-
-$orderNote .= "Bitcoin transaction id: $txid\r" .
-	"Expected amount: $expected BTC\r" .
-	"Paid amount: $paid BTC\r" .
-	"You can view the transaction at:\r" .
-	"https://www.blockonomics.co/api/tx?txid=$txid&addr=$addr";
-
-$blockonomics->updateOrderNote($true_order_id, $orderNote);
+$blockonomics->updateInvoiceNote($invoiceId, null);
 $blockonomics->updateOrderInDb($addr, $txid, $status, $value);
 
 /**
