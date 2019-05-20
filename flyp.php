@@ -50,10 +50,7 @@ function bnomics_create_order(){
     	$blockonomics = new Blockonomics();
     	$whmcs_order_id = $blockonomics->getOrderIdByInvoiceId($whmcs_invoice_id);
     	$blockonomics->updateFlypIdInDb($whmcs_order_id, $order->order->uuid);
-        $actual_link = $blockonomics->getSystemUrl();
-        $invoiceNote = "<b>Waiting for Confirmation on $flypFrom network</b>\r\r" .
-            "UUID:\r" .
-            "<a target=\"_blank\" href=\"" . $actual_link . "payment.php?uuid=".$order->order->uuid. "\">" .$order->order->uuid. "</a>";
+        $invoiceNote = "Flyp UUID: ".$order->order->uuid;
         $blockonomics->updateInvoiceNote($whmcs_invoice_id, $invoiceNote);
         $order = $flypme->orderAccept($order->order->uuid);
         if(isset($order->deposit_address)){
