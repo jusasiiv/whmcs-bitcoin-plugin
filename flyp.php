@@ -50,6 +50,8 @@ function bnomics_create_order(){
     	$blockonomics = new Blockonomics();
     	$whmcs_order_id = $blockonomics->getOrderIdByInvoiceId($whmcs_invoice_id);
     	$blockonomics->updateFlypIdInDb($whmcs_order_id, $order->order->uuid);
+        $invoiceNote = "Flyp UUID: ".$order->order->uuid;
+        $blockonomics->updateInvoiceNote($whmcs_invoice_id, $invoiceNote);
         $order = $flypme->orderAccept($order->order->uuid);
         if(isset($order->deposit_address)){
             print(json_encode($order));
