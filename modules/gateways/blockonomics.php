@@ -20,6 +20,7 @@ function blockonomics_config() {
 			var inputFields = document.getElementsByName('field[ApiSecret]');
 			inputFields.forEach(function(element) {
 				element.readOnly = true;
+				element.setAttribute('placeholder', 'If this field is empty, refresh the page.');
 			});
 
 			/**
