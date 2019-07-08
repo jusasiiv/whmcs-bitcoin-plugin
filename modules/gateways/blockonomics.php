@@ -73,7 +73,13 @@ function blockonomics_config() {
 
 			testSetupBtnCell.appendChild(newBtn);
 
-			function showTestResult(responseObj) {
+			function reqListener () {
+				try {
+					responseObj = JSON.parse(this.responseText);
+				} catch (err) {
+					responseObj.error = true;
+					responseObj.errorStr = 'Unable to locate/execute test_setup_url. Contact blockonomics support for help';
+				}
 				if (responseObj.error) {
 					testSetupResultCell.innerHTML = "<label style='color:red;'>Error:</label> " + responseObj.errorStr + 
 					"<br>For more information, please consult <a href='https://blockonomics.freshdesk.com/support/solutions/articles/33000215104-troubleshooting-unable-to-generate-new-address' target='_blank'>this troubleshooting article</a>";
@@ -83,47 +89,22 @@ function blockonomics_config() {
 				newBtn.disabled = false;
 			}
 
-			function reqListener () {
-				responseObj = {};
-				switch (this.status) {
-					case 200:
-						responseObj = JSON.parse(this.responseText);
-						break;
-					case 401:
-						responseObj.error = true;
-						responseObj.errorStr = 'There was an issue accessing the test file. Please make sure all plugin files have correct permissions.'
-						break;
-					case 404:
-						responseObj.error = true;
-						responseObj.errorStr = 'There was an issue finding the test file. Please make sure all plugin files are copied correctly.'
-						break;
-					default:
-						responseObj.error = true;
-						responseObj.errorStr = 'There was an issue when requesting testSetup.php';
-						break;
-				}
-				showTestResult(responseObj);
-			}
-
-			function timeoutListener () {
-				responseObj = {};
-				responseObj.error = true;
-				responseObj.errorStr = "There was an issue accessing the test file. Please make sure all plugin files have correct \
-																	permissions and that they are copied correctly"
-				showTestResult(responseObj);
-			}
-
 			newBtn.onclick = function() {
+				testSetupResultRow.style.display = "table-row";
 				var testSetupUrl = "$system_url" + "testSetup.php";
+				var systemUrlProtocol = new URL("$system_url").protocol;
+				if (systemUrlProtocol != location.protocol) {
+					testSetupResultCell.innerHTML = "<label style='color:red;'>Error:</label> \
+							System URL has a different protocol than current URL. Go to Setup > General Settings and verify that WHMCS System URL has \
+							correct protocol set (HTTP or HTTPS).";
+					return false;
+				}
 				var oReq = new XMLHttpRequest();
 				oReq.addEventListener("load", reqListener);
 				oReq.open("GET", testSetupUrl);
-				oReq.timeout = 10000; // 10 seconds
-				oReq.addEventListener("timeout", timeoutListener);
 				oReq.send();
 
 				newBtn.disabled = true;
-				testSetupResultRow.style.display = "table-row";
 				testSetupResultCell.innerHTML = "Testing setup...";
 
 				return false;
