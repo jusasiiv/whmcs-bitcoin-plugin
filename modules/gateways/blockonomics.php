@@ -11,6 +11,7 @@ function blockonomics_config() {
 
 		$blockonomics = new Blockonomics();
 		$system_url = $blockonomics->getSystemUrl();
+		$callback_url = $blockonomics->getCallbackSecret();
 
 		return <<<HTML
 		<script type="text/javascript">
@@ -19,6 +20,7 @@ function blockonomics_config() {
 			 */
 			var inputFields = document.getElementsByName('field[ApiSecret]');
 			inputFields.forEach(function(element) {
+				element.value = '$callback_url';
 				element.readOnly = true;
 				element.setAttribute('placeholder', 'If this field is empty, refresh the page.');
 			});
@@ -115,7 +117,6 @@ HTML;
 
 	$blockonomics = new Blockonomics();
 	$blockonomics->createOrderTableIfNotExist();
-	$secret_value = $blockonomics->getCallbackSecret();
 	
 	return array(
 		'FriendlyName' => array(
