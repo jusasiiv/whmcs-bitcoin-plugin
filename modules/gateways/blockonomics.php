@@ -22,7 +22,6 @@ function blockonomics_config() {
 			inputFields.forEach(function(element) {
 				element.value = '$callback_url';
 				element.readOnly = true;
-				element.setAttribute('placeholder', 'If this field is empty, refresh the page.');
 			});
 
 			/**
