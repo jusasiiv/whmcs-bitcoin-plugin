@@ -74,6 +74,7 @@ function blockonomics_config() {
 			testSetupBtnCell.appendChild(newBtn);
 
 			function reqListener () {
+				var responseObj = {};
 				try {
 					responseObj = JSON.parse(this.responseText);
 				} catch (err) {
