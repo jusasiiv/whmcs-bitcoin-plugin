@@ -74,7 +74,14 @@ function blockonomics_config() {
 			testSetupBtnCell.appendChild(newBtn);
 
 			function reqListener () {
-				responseObj = JSON.parse(this.responseText);
+				var responseObj = {};
+				try {
+					responseObj = JSON.parse(this.responseText);
+				} catch (err) {
+					var testSetupUrl = "$system_url" + "testSetup.php";
+					responseObj.error = true;
+					responseObj.errorStr = 'Unable to locate/execute ' + testSetupUrl + '. Contact blockonomics support for help';
+				}
 				if (responseObj.error) {
 					testSetupResultCell.innerHTML = "<label style='color:red;'>Error:</label> " + responseObj.errorStr + 
 					"<br>For more information, please consult <a href='https://blockonomics.freshdesk.com/support/solutions/articles/33000215104-troubleshooting-unable-to-generate-new-address' target='_blank'>this troubleshooting article</a>";
@@ -85,14 +92,21 @@ function blockonomics_config() {
 			}
 
 			newBtn.onclick = function() {
+				testSetupResultRow.style.display = "table-row";
 				var testSetupUrl = "$system_url" + "testSetup.php";
+				var systemUrlProtocol = new URL("$system_url").protocol;
+				if (systemUrlProtocol != location.protocol) {
+					testSetupResultCell.innerHTML = "<label style='color:red;'>Error:</label> \
+							System URL has a different protocol than current URL. Go to Setup > General Settings and verify that WHMCS System URL has \
+							correct protocol set (HTTP or HTTPS).";
+					return false;
+				}
 				var oReq = new XMLHttpRequest();
 				oReq.addEventListener("load", reqListener);
 				oReq.open("GET", testSetupUrl);
 				oReq.send();
 
 				newBtn.disabled = true;
-				testSetupResultRow.style.display = "table-row";
 				testSetupResultCell.innerHTML = "Testing setup...";
 
 				return false;
