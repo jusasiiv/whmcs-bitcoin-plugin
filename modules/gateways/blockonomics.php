@@ -96,13 +96,20 @@ function blockonomics_config() {
 			newBtn.onclick = function() {
 				testSetupResultRow.style.display = "table-row";
 				var testSetupUrl = "$system_url" + "testSetup.php";
-				var systemUrlProtocol = new URL("$system_url").protocol;
+
+				try {
+					var systemUrlProtocol = new URL("$system_url").protocol;
+				} catch (err) {
+					var systemUrlProtocol = '';
+				}
+
 				if (systemUrlProtocol != location.protocol) {
 					testSetupResultCell.innerHTML = "<label style='color:red;'>Error:</label> \
 							System URL has a different protocol than current URL. Go to Setup > General Settings and verify that WHMCS System URL has \
 							correct protocol set (HTTP or HTTPS).";
 					return false;
 				}
+				
 				var oReq = new XMLHttpRequest();
 				oReq.addEventListener("load", reqListener);
 				oReq.open("GET", testSetupUrl);
