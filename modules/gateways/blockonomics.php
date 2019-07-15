@@ -82,7 +82,7 @@ function blockonomics_config() {
 				} catch (err) {
 					var testSetupUrl = "$system_url" + "testSetup.php";
 					responseObj.error = true;
-					responseObj.errorStr = 'Unable to locate/execute ' + testSetupUrl + '. Contact blockonomics support for help';
+					responseObj.errorStr = 'Unable to locate/execute ' + testSetupUrl + '. Check your WHMCS System URL ';
 				}
 				if (responseObj.error) {
 					testSetupResultCell.innerHTML = "<label style='color:red;'>Error:</label> " + responseObj.errorStr + 
