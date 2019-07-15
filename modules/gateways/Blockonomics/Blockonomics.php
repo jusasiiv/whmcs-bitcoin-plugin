@@ -41,10 +41,9 @@ class Blockonomics {
 
 			$callback_secret = $this->getSystemUrl() . 'modules/gateways/callback/blockonomics.php?secret=' . $callback_secret;
 
-			$api_secret = Capsule::table('tblpaymentgateways')
-					->where('gateway', 'blockonomics')
-					->where('setting', 'ApiSecret')
-					->update(['value' => $callback_secret]);
+			$api_secret = Capsule::table('tblpaymentgateways')->insert([
+				['gateway' => 'blockonomics', 'setting' => 'ApiSecret', 'value' => $callback_secret]
+			]);
 
 		} catch(\Exception $e) {
 			echo "Error, could not get Blockonomics secret from database. {$e->getMessage()}";

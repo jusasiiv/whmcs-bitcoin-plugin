@@ -11,6 +11,7 @@ function blockonomics_config() {
 
 		$blockonomics = new Blockonomics();
 		$system_url = $blockonomics->getSystemUrl();
+		$callback_url = $blockonomics->getCallbackSecret();
 
 		return <<<HTML
 		<script type="text/javascript">
@@ -19,6 +20,7 @@ function blockonomics_config() {
 			 */
 			var inputFields = document.getElementsByName('field[ApiSecret]');
 			inputFields.forEach(function(element) {
+				element.value = '$callback_url';
 				element.readOnly = true;
 			});
 
@@ -80,7 +82,7 @@ function blockonomics_config() {
 				} catch (err) {
 					var testSetupUrl = "$system_url" + "testSetup.php";
 					responseObj.error = true;
-					responseObj.errorStr = 'Unable to locate/execute ' + testSetupUrl + '. Contact blockonomics support for help';
+					responseObj.errorStr = 'Unable to locate/execute ' + testSetupUrl + '. Check your WHMCS System URL ';
 				}
 				if (responseObj.error) {
 					testSetupResultCell.innerHTML = "<label style='color:red;'>Error:</label> " + responseObj.errorStr + 
@@ -94,13 +96,20 @@ function blockonomics_config() {
 			newBtn.onclick = function() {
 				testSetupResultRow.style.display = "table-row";
 				var testSetupUrl = "$system_url" + "testSetup.php";
-				var systemUrlProtocol = new URL("$system_url").protocol;
+
+				try {
+					var systemUrlProtocol = new URL("$system_url").protocol;
+				} catch (err) {
+					var systemUrlProtocol = '';
+				}
+
 				if (systemUrlProtocol != location.protocol) {
 					testSetupResultCell.innerHTML = "<label style='color:red;'>Error:</label> \
 							System URL has a different protocol than current URL. Go to Setup > General Settings and verify that WHMCS System URL has \
 							correct protocol set (HTTP or HTTPS).";
 					return false;
 				}
+				
 				var oReq = new XMLHttpRequest();
 				oReq.addEventListener("load", reqListener);
 				oReq.open("GET", testSetupUrl);
@@ -128,7 +137,6 @@ HTML;
 
 	$blockonomics = new Blockonomics();
 	$blockonomics->createOrderTableIfNotExist();
-	$secret_value = $blockonomics->getCallbackSecret();
 	
 	return array(
 		'FriendlyName' => array(
