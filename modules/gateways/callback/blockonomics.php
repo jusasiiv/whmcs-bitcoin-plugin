@@ -32,7 +32,6 @@ $txid = $_GET['txid'];
  * Validate callback authenticity.
  */
 $secret_value = $blockonomics->getCallbackSecret();
-$secret_value = substr($secret_value, -40);
 
 if ($secret_value != $secret) {
 	$transactionStatus = 'Secret verification failure';
