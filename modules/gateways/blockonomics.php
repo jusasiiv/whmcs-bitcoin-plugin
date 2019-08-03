@@ -11,14 +11,14 @@ function blockonomics_config() {
 
 		$blockonomics = new Blockonomics();
 		$system_url = $blockonomics->getSystemUrl();
-		$callback_url = $blockonomics->getCallbackSecret();
+		$callback_url = $blockonomics->getCallbackUrl();
 
 		return <<<HTML
 		<script type="text/javascript">
 			/**
 			 * Disable callback url editing
 			 */
-			var inputFields = document.getElementsByName('field[ApiSecret]');
+			var inputFields = document.getElementsByName('field[CallbackURL]');
 			inputFields.forEach(function(element) {
 				element.value = '$callback_url';
 				element.readOnly = true;
@@ -148,7 +148,7 @@ HTML;
 			'Description'  => 'BLOCKONOMICS API KEY (Click "Get Started For Free" on <a target="_blank" href="https://www.blockonomics.co/blockonomics#/merchants">Merchants</a> and follow setup wizard)  ',
 			'Type'         => 'text'
 		),
-		'ApiSecret' => array(
+		'CallbackURL' => array(
 			'FriendlyName' => 'Callback URL',
 			'Description'  => 'CALLBACK URL (Copy this url and set in <a target="_blank" href="https://www.blockonomics.co/merchants#/page6">Merchants</a>)',
 			'Type'         => 'text'

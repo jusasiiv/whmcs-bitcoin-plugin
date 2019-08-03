@@ -7,28 +7,52 @@ use WHMCS\Database\Capsule;
 class Blockonomics {
 
 	/*
+	 * Get callback secret and SystemURL to form the callback URL
+	 */
+	public function getCallbackUrl() {
+		$secret = $this->getCallbackSecret();
+		$callback_url = $this->getSystemUrl() . 'modules/gateways/callback/blockonomics.php?secret=' . $secret;
+		return $callback_url;
+	}
+
+	/*
 	 * Try to get callback secret from db
 	 * If no secret exists, create new
 	 */
 	public function getCallbackSecret() {
 
-		$api_secret = '';
+		$secret = '';
 
 		try {
-			$api_secret = Capsule::table('tblpaymentgateways')
+			$secret = Capsule::table('tblpaymentgateways')
 					->where('gateway', 'blockonomics')
-					->where('setting', 'ApiSecret')
+					->where('setting', 'CallbackSecret')
 					->value('value');
 
 		} catch(\Exception $e) {
 			echo "Error, could not get Blockonomics secret from database. {$e->getMessage()}";
 		}
 
-		if($api_secret == '') {
-			$api_secret = $this->generateCallbackSecret();
+		// Check if old format of callback is still in use
+		if($secret == '') {
+			try {
+				$secret = Capsule::table('tblpaymentgateways')
+						->where('gateway', 'blockonomics')
+						->where('setting', 'ApiSecret')
+						->value('value');
+
+			} catch(\Exception $e) {
+				echo "Error, could not get Blockonomics secret from database. {$e->getMessage()}";
+			}
+			// Get only the secret from the whole Callback URL
+			$secret = substr($secret, -40);
+		}
+			
+		if($secret == '') {
+			$secret = $this->generateCallbackSecret();
 		}
 
-		return $api_secret;
+		return $secret;
 	}
 
 	/*
@@ -39,10 +63,8 @@ class Blockonomics {
 		try {
 			$callback_secret = sha1(openssl_random_pseudo_bytes(20));
 
-			$callback_secret = $this->getSystemUrl() . 'modules/gateways/callback/blockonomics.php?secret=' . $callback_secret;
-
-			$api_secret = Capsule::table('tblpaymentgateways')->insert([
-				['gateway' => 'blockonomics', 'setting' => 'ApiSecret', 'value' => $callback_secret]
+			$secret = Capsule::table('tblpaymentgateways')->insert([
+				['gateway' => 'blockonomics', 'setting' => 'CallbackSecret', 'value' => $callback_secret]
 			]);
 
 		} catch(\Exception $e) {
@@ -157,18 +179,14 @@ class Blockonomics {
 	public function getNewBitcoinAddress($reset=false) {
 
 		$api_key = $this->getApiKey();
-		$secret = $this->getCallbackSecret();
+		$callback_url = $this->getCallbackUrl();
 
 		if($reset) {
-				$get_params = "?match_callback=$secret&reset=1";
+				$get_params = "?match_callback=$callback_url&reset=1";
 		} 
 		else {
-				$get_params = "?match_callback=$secret";
+				$get_params = "?match_callback=$callback_url";
 		}
-
-		// Secret is formatted http://url.com?secret=abc123,
-		// Get last 40 chars of the secret string
-		$secret = substr($secret, -40);
 
 		$ch = curl_init();
 
@@ -504,7 +522,7 @@ class Blockonomics {
 
 		$response = $this->doCurlCall($xpub_fetch_url);
 
-		$callback_url = $this->getCallbackSecret();
+		$callback_url = $this->getCallbackUrl();
 
 		if (!isset($response->response_code)) {
 			$error_str = 'Your server is blocking outgoing HTTPS calls';
