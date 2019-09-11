@@ -153,18 +153,18 @@ HTML;
 			'Description'  => 'CALLBACK URL (Copy this url and set in <a target="_blank" href="https://www.blockonomics.co/merchants#/page6">Merchants</a>)',
 			'Type'         => 'text'
 		),
-    'TimePeriod' => array(
-        'FriendlyName' => 'Time Period',
-        'Type' => 'dropdown',
-        'Options' => array(
-            '10' => '10',
-            '15' => '15',
-            '20' => '20',
-            '25' => '25',
-            '30' => '30',
-        ),
-        'Description' => 'Time period of countdown timer on payment page (in minutes)',
-    ),
+		'TimePeriod' => array(
+			'FriendlyName' => 'Time Period',
+			'Type' => 'dropdown',
+			'Options' => array(
+				'10' => '10',
+				'15' => '15',
+				'20' => '20',
+				'25' => '25',
+				'30' => '30',
+			),
+			'Description' => 'Time period of countdown timer on payment page (in minutes)',
+		),
 		'Altcoins' => array(
 				'FriendlyName' => 'Altcoins enabled',
 				'Type' => 'yesno',
@@ -183,6 +183,17 @@ HTML;
 				'Size' => '5',
 				'Default' => 0,
 				'Description' => 'Allow payments that are off by a small percentage',
+			),
+		'Confirmations' => array(
+			'FriendlyName' => 'Confirmations',
+			'Type' => 'dropdown',
+			'Default' => 2,
+			'Options' => array(
+				'2' => '2 (recommended)',
+				'1' => '1',
+				'0' => '0'
+			),
+			'Description' => 'Network Confirmations required for payment to complete',
 		),
 	);
 }
