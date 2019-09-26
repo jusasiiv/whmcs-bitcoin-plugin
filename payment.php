@@ -127,21 +127,24 @@ if ($uuid) {
 		 */
 		if($existing_order['status'] == -1) {
 			$btc_address = $existing_order['address'];
+			$btc_amount = $blockonomics->getBitcoinAmount($fiat_amount, $currency);
+			$ca->assign('btc_amount', $btc_amount / 1.0e8);
+			$blockonomics->updateOrderExpected($order_id, $btc_amount, $fiat_amount);
 		} elseif ($existing_order['status'] == 0 || $existing_order['status'] == 1) {
 			$ca->assign('pending', true);
 			$ca->assign('txid', $existing_order['txid']);
 		} elseif ($existing_order['status'] == 2) {
 			$btc_address = generate_address($blockonomics, $ca);
 			$blockonomics->updateOrderAddress($order_id, $btc_address);
+			$btc_amount = $blockonomics->getBitcoinAmount($fiat_amount, $currency);
+			$ca->assign('btc_amount', $btc_amount / 1.0e8);
+			$blockonomics->updateOrderExpected($order_id, $btc_amount, $fiat_amount);
 		}
 		
 		// Only set BTC address to template if it has been generated successfully
 		if ($btc_address) {
 			$ca->assign('btc_address', $btc_address);
 		}
-		$btc_amount = $blockonomics->getBitcoinAmount($fiat_amount, $currency);
-		$ca->assign('btc_amount', $btc_amount / 1.0e8);
-		$blockonomics->updateOrderExpected($order_id, $btc_amount, $fiat_amount);
 	}
 
 	# Define the template filename to be used without the .tpl extension
