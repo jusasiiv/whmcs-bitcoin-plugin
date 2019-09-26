@@ -108,10 +108,14 @@ class Blockonomics {
 	 * Get user configured Confirmations from database
 	 */
 	public function getConfirmations() {
-		return Capsule::table('tblpaymentgateways')
+		$confirmations = Capsule::table('tblpaymentgateways')
 			->where('gateway', 'blockonomics')
 			->where('setting', 'Confirmations')
 			->value('value');
+		if(isset($confirmations)){
+			return $confirmations;
+		}
+		return 2;
 	}
 
 	/*
