@@ -45,10 +45,6 @@ $order = $blockonomics->getOrderByAddress($addr);
 $invoiceId = $order['order_id'];
 $bits = $order['bits'];
 
-if($status != 2 && $status != 1 && $status != 0) {
-	die();
-}
-
 $confirmations = $blockonomics->getConfirmations();
 
 if($status < $confirmations) {
