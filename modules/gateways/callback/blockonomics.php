@@ -45,7 +45,9 @@ $order = $blockonomics->getOrderByAddress($addr);
 $invoiceId = $order['order_id'];
 $bits = $order['bits'];
 
-if($status == 0) {
+$confirmations = $blockonomics->getConfirmations();
+
+if($status < $confirmations) {
 	$invoiceNote = "<b>Waiting for Confirmation on Bitcoin network</b>\r\r" .
 		"Bitcoin transaction id:\r" .
 		"<a target=\"_blank\" href=\"https://www.blockonomics.co/api/tx?txid=$txid&addr=$addr\">$txid</a>";
@@ -54,10 +56,6 @@ if($status == 0) {
 	$true_order_id = $blockonomics->getOrderIdByInvoiceId($invoiceId);
 	$blockonomics->updateInvoiceNote($invoiceId, $invoiceNote);
 
-	die();
-}
-
-if($status != 2) {
 	die();
 }
 

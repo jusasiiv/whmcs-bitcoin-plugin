@@ -95,13 +95,27 @@ class Blockonomics {
 	}
 
 	/*
-	 * Get user configured API key from database
+	 * Get user configured Time Period from database
 	 */
 	public function getTimePeriod() {
 		return Capsule::table('tblpaymentgateways')
 			->where('gateway', 'blockonomics')
 			->where('setting', 'TimePeriod')
 			->value('value');
+	}
+
+	/*
+	 * Get user configured Confirmations from database
+	 */
+	public function getConfirmations() {
+		$confirmations = Capsule::table('tblpaymentgateways')
+			->where('gateway', 'blockonomics')
+			->where('setting', 'Confirmations')
+			->value('value');
+		if(isset($confirmations)){
+			return $confirmations;
+		}
+		return 2;
 	}
 
 	/*
