@@ -95,7 +95,8 @@ function blockonomics_config() {
 
 			newBtn.onclick = function() {
 				testSetupResultRow.style.display = "table-row";
-				var testSetupUrl = "$system_url" + "testSetup.php";
+				var apiKeyField = document.getElementsByName('field[ApiKey]')[0];
+				var testSetupUrl = "$system_url" + "testSetup.php"+"?new_api="+apiKeyField.value;
 
 				try {
 					var systemUrlProtocol = new URL("$system_url").protocol;
@@ -119,15 +120,6 @@ function blockonomics_config() {
 				testSetupResultCell.innerHTML = "Testing setup...";
 
 				return false;
-			}
-
-			/**
-			 * Prompt to save changes after setting a new API key 
-			 */
-			var apiKeyField = document.getElementsByName('field[ApiKey]')[0];
-			apiKeyField.onchange = function() {
-				testSetupResultRow.style.display = "table-row";
-				testSetupResultCell.innerHTML = "<label style='color:#337ab7;'>New API Key: Save your changes and then click 'Test Setup'</label>";
 			}
 
 		</script>
