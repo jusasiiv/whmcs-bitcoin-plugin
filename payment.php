@@ -25,7 +25,9 @@ $ca->initPage();
  * SET POST PARAMETERS TO VARIABLES AND CHECK IF THEY EXIST
  */
 $uuid = isset($_REQUEST['uuid']) ? $_REQUEST['uuid'] : "";
-$address = isset($_REQUEST['get_order']) ? $_REQUEST['get_order'] : "";
+$get_order = isset($_REQUEST['get_order']) ? $_REQUEST['get_order'] : "";
+$finish_order = isset($_REQUEST['finish_order']) ? $_REQUEST['finish_order'] : "";
+
 $fiat_amount = $_POST['price'];
 $currency = $_POST['currency'];
 $order_id = $_POST['order_id'];
@@ -87,6 +89,11 @@ if ($uuid) {
         	header("Content-Type: application/json");
         	exit(json_encode($existing_order));
 		}
+	}else if($finish_order){
+		$existing_order = $blockonomics->getOrderByAddress($finish_order);
+		$finish_url = $system_url . 'viewinvoice.php?id=' . $existing_order['order_id'] . '&paymentsuccess=true';
+		header("Location: $finish_url");
+        exit();
 	}else if(!$fiat_amount || !$currency || !$order_id) {
 		echo "<b>Error: Failed to fetch order data.</b> <br> 
 					Note to admin: Please check that your System URL is configured correctly.
