@@ -24,7 +24,8 @@ $ca->initPage();
 /*
  * SET POST PARAMETERS TO VARIABLES AND CHECK IF THEY EXIST
  */
-$uuid = $_REQUEST['uuid'];
+$uuid = isset($_REQUEST['uuid']) ? $_REQUEST['uuid'] : "";
+$address = isset($_REQUEST['get_order']) ? $_REQUEST['get_order'] : "";
 $fiat_amount = $_POST['price'];
 $currency = $_POST['currency'];
 $order_id = $_POST['order_id'];
@@ -77,7 +78,16 @@ if ($uuid) {
 
 	$ca->output();
 }else{
-	if(!$fiat_amount || !$currency || !$order_id) {
+	if($get_order){
+		$existing_order = $blockonomics->getOrderByAddress($get_order);
+		// No order exists, exit
+		if(is_null($existing_order['order_id'])) {
+			exit;
+		} else {
+        	header("Content-Type: application/json");
+        	exit(json_encode($existing_order));
+		}
+	}else if(!$fiat_amount || !$currency || !$order_id) {
 		echo "<b>Error: Failed to fetch order data.</b> <br> 
 					Note to admin: Please check that your System URL is configured correctly.
 					If you are using SSL, verify that System URL is set to use HTTPS and not HTTP. <br>
