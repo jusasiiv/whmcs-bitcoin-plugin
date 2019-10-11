@@ -29,23 +29,22 @@ function bnomics_save_uuid(){
 }
 
 function bnomics_send_email(){
-    $blockonomics = new Blockonomics();
-    $actual_link = $blockonomics->getSystemUrl();
-    $flypID                 = $_REQUEST['uuid'];
-    $flypCoin               = $_REQUEST['coin'];
-    $flypSymbol             = $_REQUEST['symbol'];
-    $whmcs_invoice_id       = $_REQUEST['order_id'];
-    $subject = $flypCoin . ' Payment Recieved';
+    $order_id = $_REQUEST['order_id'];
+    $uuid = $_REQUEST['order_uuid'];
+    $order_coin = $_REQUEST['order_coin'];
+    $refund_address = $_REQUEST['refund_address'];
+    $subject = $order_coin . ' ' . 'Refund';
     $command = 'SendEmail';
     $postData = array(
         'messagename' => 'Altcoin Payment Email',
-        'id' => $whmcs_invoice_id,
+        'id' => $order_id,
         'customtype' => 'invoice',
         'customsubject' => $subject,
-        'custommessage' => '<p>Your payment has been received. It will take a while for the network to confirm your order.</p>
-                            <p>To view your payment status, copy and use the link below.</p>
-                            <a href="{$link}">{$link}</a>',
-        'customvars' => base64_encode(serialize(array("link"=>$actual_link . 'payment.php?uuid='.$flypID))),
+        'custommessage' => '<p>Your refund details have been submitted. The refund will be automatically sent to<br>
+                            <b>{$refund_address}</b><br>
+                            If you don&#39;t get refunded in a few hours, contact <a href=\'mailto:support@flyp.me\'>support@flyp.me</a> with the following uuid:<br>
+                            <b>{$uuid}</b></p>',
+        'customvars' => base64_encode(serialize(array("refund_address"=>$refund_address,"uuid"=>$uuid))),
     );
     // For Versions before WHMCS 7.2
     //$adminUsername = 'ADMIN_USERNAME'; // Enter Admin user name
