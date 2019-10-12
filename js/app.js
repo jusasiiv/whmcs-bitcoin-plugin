@@ -74,6 +74,8 @@ app.controller('CheckoutController', function($scope, $interval, Order, $httpPar
 	$scope.address = btcAddressDiv.dataset.address;
 	var timePeriodDiv = document.getElementById("time-period");
 	blockonomics_time_period = timePeriodDiv.dataset.timeperiod;
+    var currencyDiv = document.getElementById("currency");
+    $scope.currency = currencyDiv.dataset.currency;
     var totalProgress = 100;
     $scope.copyshow = false;
     //blockonomics_time_period is defined on JS file as global var
@@ -209,6 +211,7 @@ app.controller('CheckoutController', function($scope, $interval, Order, $httpPar
             $scope.order = data;
             $scope.order.address = $scope.address;
             $scope.order.altcoin = $scope.altcoin;
+            $scope.order.currency = $scope.currency;
             //Check the status of the order
             if ($scope.order.status == -1) {
                 $scope.clock = $scope.order.timestamp + totalTime - Math.floor(Date.now() / 1000);

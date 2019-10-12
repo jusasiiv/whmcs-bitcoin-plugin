@@ -8,6 +8,7 @@
 <div id="btc-amount" data-amount="{$btc_amount}"></div>
 <div id="system-url" data-url="{$system_url}" data-orderid="{$order_id}"></div>
 <div id="time-period" data-timeperiod="{$time_period}"></div>
+<div id="currency" data-currency="{$currency}"></div>
 
 <div ng-app="shopping-cart-demo">
   <div ng-controller="CheckoutController">
