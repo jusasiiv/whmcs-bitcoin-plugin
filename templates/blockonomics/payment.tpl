@@ -213,7 +213,7 @@
                 <h4>Refund Submitted</h4>
                 <div>Your refund details have been submitted. The refund will be automatically sent to <b>[[altrefund]]</b></div>
                 <h4><i class="material-icons bnomics-alt-icon">autorenew</i></h4>
-                <div>If you don\'t get refunded in a few hours, contact <a href="mailto:support@flyp.me">support@flyp.me</a> with the following uuid:<br><span id="alt-uuid"><b>[[altuuid]]</b></span></div>
+                <div>If you don't get refunded in a few hours, contact <a href="mailto:support@flyp.me">support@flyp.me</a> with the following uuid:<br><span id="alt-uuid"><b>[[altuuid]]</b></span></div>
                 <div>We have emailed you the information on this page. You can safely close this window or navigate away</div>
               </div>
               <!-- EXPIRED -->
