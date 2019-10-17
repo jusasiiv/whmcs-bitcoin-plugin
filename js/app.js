@@ -40,7 +40,7 @@ service.factory('AltcoinLimits', function($resource) {
     return rsc;
 });
 
-service.factory('WpAjax', function($resource) {
+service.factory('InternalApi', function($resource) {
     var rsc = $resource('flyp.php');
     return rsc;
 });
@@ -68,7 +68,7 @@ function getParameterByNameBlocko(name, url) {
 }
 
 //CheckoutController
-app.controller('CheckoutController', function($scope, $interval, Order, $httpParamSerializer, $timeout, AltcoinNew, AltcoinAccept, AltcoinLimits, WpAjax) {
+app.controller('CheckoutController', function($scope, $interval, Order, $httpParamSerializer, $timeout, AltcoinNew, AltcoinAccept, AltcoinLimits, InternalApi) {
     //get order id from url
     var btcAddressDiv = document.getElementById("btc-address");
 	$scope.address = btcAddressDiv.dataset.address;
@@ -152,7 +152,7 @@ app.controller('CheckoutController', function($scope, $interval, Order, $httpPar
                         }else{
                             var uuid = values[1].order.uuid;
                             //Save the altcoin uuid to database
-                            WpAjax.get({
+                            InternalApi.get({
                                 action: 'save_uuid',
                                 address: address,
                                 uuid: uuid
@@ -255,7 +255,7 @@ app.controller('CheckoutController', function($scope, $interval, Order, $httpPar
 });
 
 //AltcoinController
-app.controller('AltcoinController', function($scope, $interval, Order, AltcoinCheck, AltcoinInfo, AltcoinAddRefund, WpAjax, $timeout, $httpParamSerializer) {
+app.controller('AltcoinController', function($scope, $interval, Order, AltcoinCheck, AltcoinInfo, AltcoinAddRefund, InternalApi, $timeout, $httpParamSerializer) {
     var totalProgress = 100;
     var alt_totalTime = 0;
     var check_interval;
@@ -293,7 +293,7 @@ app.controller('AltcoinController', function($scope, $interval, Order, AltcoinCh
     //Send altcoin refund email 
     function send_refund_email() {
         uuid = get_uuid();
-        WpAjax.get({
+        InternalApi.get({
             action: 'send_email',
             order_id: $scope.order.order_id,
             order_uuid: uuid,
