@@ -200,7 +200,7 @@
               <!-- ADD_REFUND -->
               <div class="bnomics-status-flex bnomics-altcoin-bg-color" ng-show="order.altstatus == 'add_refund'" ng-cloak >
                 <h4>Refund Required</h4>
-                <p ng-hide="hide_refund_reason">Your order couldn\'t be processed as you didn\'t pay the exact expected amount.<br>The amount you paid will be refunded.</p>
+                <p ng-hide="hide_refund_reason">Your order couldn't be processed as you didn't pay the exact expected amount.<br>The amount you paid will be refunded.</p>
                 <h4><i class="material-icons bnomics-alt-icon">error</i></h4>
                 <p id="bnomics-refund-message">Enter your refund address and click the button below to recieve your refund.</p>
                 <div id="bnomics-refund-errors"></div>
