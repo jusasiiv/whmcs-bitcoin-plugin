@@ -109,7 +109,7 @@
       </div>
     </div>
     <script>
-    var blockonomics_time_period=10;
+    var blockonomics_time_period={$time_period};
     </script>
     <script>
     var get_uuid="";
