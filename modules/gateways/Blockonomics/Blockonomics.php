@@ -399,7 +399,8 @@ class Blockonomics {
 			"address"=> $existing_order->addr,
 			"bits" => $existing_order->bits,
 			"status" => $existing_order->status,
-			"txid" => $existing_order->txid
+			"txid" => $existing_order->txid,
+			"timestamp" => $existing_order->timestamp
 		);
 
 		return $row_in_array;
@@ -442,12 +443,13 @@ class Blockonomics {
 	/*
 	 * Update existing order's expected amount and FIAT amount. Use WHMCS invoice id as key
 	 */
-	public function updateOrderExpected($id_order, $expected, $fiat_amount) {
+	public function updateOrderExpected($id_order, $timestamp, $expected, $fiat_amount) {
 		try {
 			Capsule::table('blockonomics_bitcoin_orders')
 					->where('id_order', $id_order)
 					->update([
 						'bits' => $expected,
+						'timestamp' => $timestamp,
 						'value' => $fiat_amount
 					]
 				);

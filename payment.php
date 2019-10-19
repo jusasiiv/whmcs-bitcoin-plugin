@@ -143,9 +143,18 @@ if ($uuid) {
 		$confirmations = $blockonomics->getConfirmations();
 		if($existing_order['status'] == -1) {
 			$btc_address = $existing_order['address'];
-			$btc_amount = $blockonomics->getBitcoinAmount($fiat_amount, $currency);
+			$btc_amount = $existing_order['bits'];
+			$timestamp = $existing_order['timestamp'];
+			//Check if existing order is expired
+			$current_time = time();
+			$total_time = $blockonomics->getTimePeriod() * 60;
+			$clock = $timestamp + $total_time - $current_time;
+			if($clock < 0){
+				$btc_amount = $blockonomics->getBitcoinAmount($fiat_amount, $currency);
+				$timestamp = $current_time;
+			}
 			$ca->assign('btc_amount', $btc_amount / 1.0e8);
-			$blockonomics->updateOrderExpected($order_id, $btc_amount, $fiat_amount);
+			$blockonomics->updateOrderExpected($order_id, $timestamp, $btc_amount, $fiat_amount);
 		} elseif ($existing_order['status'] < $confirmations) {
 			$ca->assign('pending', true);
 			$ca->assign('txid', $existing_order['txid']);
@@ -153,8 +162,9 @@ if ($uuid) {
 			$btc_address = generate_address($blockonomics, $ca);
 			$blockonomics->updateOrderAddress($order_id, $btc_address);
 			$btc_amount = $blockonomics->getBitcoinAmount($fiat_amount, $currency);
+			$timestamp = $existing_order['timestamp'];
 			$ca->assign('btc_amount', $btc_amount / 1.0e8);
-			$blockonomics->updateOrderExpected($order_id, $btc_amount, $fiat_amount);
+			$blockonomics->updateOrderExpected($order_id, $timestamp, $btc_amount, $fiat_amount);
 		}
 		
 		// Only set BTC address to template if it has been generated successfully
