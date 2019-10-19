@@ -59,9 +59,7 @@ if ($uuid) {
 	$ca->assign('altcoins', 1);
 	$ca->assign('flyp_id', $uuid);
 	// No order exists, exit
-	if(is_null($existing_order['order_id'])) {
-		exit;
-	} else {
+	if(!is_null($existing_order['order_id'])) {
 		$order_id = $existing_order['order_id'];
 		$ca->assign('order_id', $order_id);
 
