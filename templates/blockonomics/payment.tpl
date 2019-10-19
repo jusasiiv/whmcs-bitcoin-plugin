@@ -2,7 +2,22 @@
 <link rel="stylesheet" type="text/css" href="css/icons/icons.css">
 <link rel="stylesheet" type="text/css" href="css/cryptofont/cryptofont.min.css">
 
-{if !$flyp_id }
+{if $error}
+
+<div id="address-error">
+    <h3>Could not generate new bitcoin address.</h3>
+    <i>Note to webmaster: Please login to admin and go to Setup > Payments > Payment Gateways > Manage Existing Gateways and use the Test Setup button to diagnose the error. </i>
+</div>
+
+{elseif $pending}
+
+<div id="address-error">
+    <h3>Payment is pending</h3>
+    <i>Additional payments to invoice are only allowed after current pending transaction is confirmed. Monitor the transaction here: 
+      <a href="https://www.blockonomics.co/api/tx?txid={$txid}" target="_blank">{$txid}</a></i>
+</div>
+
+{elseif !$flyp_id }
 <div id="btc-href" data-href="bitcoin:{$btc_address}?amount={$btc_amount}"></div>
 <div id="btc-address" data-address="{$btc_address}"></div>
 <div id="btc-amount" data-amount="{$btc_amount}"></div>
@@ -104,7 +119,7 @@
                 </div>
             </div>
           </div>
-		{/if}
+		    {/if}
         </div>
       </div>
     </div>
@@ -244,24 +259,6 @@
     var get_uuid="";
   </script>
 </div>
-{/if}
-{if $error}
-
-<div id="address-error">
-    <h3>Could not generate new bitcoin address.</h3>
-    <i>Note to webmaster: Please login to admin and go to Setup > Payments > Payment Gateways > Manage Existing Gateways and use the Test Setup button to diagnose the error. </i>
-</div>
-
-{/if}
-
-{if $pending}
-
-<div id="address-error">
-    <h3>Payment is pending</h3>
-    <i>Additional payments to invoice are only allowed after current pending transaction is confirmed. Monitor the transaction here: 
-      <a href="https://www.blockonomics.co/api/tx?txid={$txid}" target="_blank">{$txid}</a></i>
-</div>
-
 {/if}
 
 <script type="text/javascript" src="js/angular.min.js"></script>
