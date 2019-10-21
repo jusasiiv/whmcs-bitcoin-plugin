@@ -18,6 +18,7 @@ if ( isset( $_REQUEST['action'] ) ) {
 function bnomics_save_uuid(){
     $flypAddress    = $_REQUEST['address'];
     $flypUuid    = $_REQUEST['uuid'];
+    $whmcs_invoice_id = $_REQUEST['order_id'];
     $blockonomics = new Blockonomics();
     $whmcs_order = $blockonomics->getOrderByAddress($flypAddress);
     $whmcs_order_id = $whmcs_order["order_id"];

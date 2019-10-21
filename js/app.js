@@ -155,6 +155,7 @@ app.controller('CheckoutController', function($scope, $interval, Order, $httpPar
                             InternalApi.get({
                                 action: 'save_uuid',
                                 address: address,
+                                order_id: order_id,
                                 uuid: uuid
                             });
                             //Accept the altcoin order using the uuid
