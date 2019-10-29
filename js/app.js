@@ -473,11 +473,6 @@ app.controller('AltcoinController', function($scope, $interval, Order, AltcoinCh
             });
     }
 
-    //Go back to bitcoin payment page
-    $scope.go_back = function() {
-        window.history.back();
-    }
-
     //Go to add refund page
     $scope.get_refund = function() {
         $scope.hide_refund_reason = true;

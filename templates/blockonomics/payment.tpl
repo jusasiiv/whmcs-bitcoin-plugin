@@ -197,9 +197,6 @@
                     <span class="ng-cloak bnomics-time-left" ng-hide="order.altstatus != 'waiting' || alt_clock <= 0">[[alt_clock*1000 | date:'mm:ss' : 'UTC']] min left to pay your order
                     </span>
                   </div>
-                  <div class="bnomics-altcoin-cancel">
-                    <a href="" ng-click="go_back()">Click here</a> to go back
-                  </div>
                   <!-- Blockonomics Credit -->
                   <div class="bnomics-powered-by">
                     Powered by Blockonomics
@@ -243,7 +240,6 @@
                 <h4>Error</h4>
                 <h4><i class="material-icons bnomics-alt-icon">error</i></h4>
                 <p>Order amount too <strong>[[lowhigh]]</strong> for [[order.altsymbol]] payment.</p>
-                <p><a href="" ng-click="go_back()">Click here</a> to go back and use BTC to complete the payment.</p>
               </div>
             </div>
           <!-- Blockonomics Credit -->
